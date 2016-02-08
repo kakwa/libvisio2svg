@@ -4,17 +4,11 @@
 *.o
 *.obj
 
-# Precompiled Headers
-*.gch
-*.pch
-
 # Compiled Dynamic libraries
 *.so
 *.dylib
 *.dll
-
-# Fortran module files
-*.mod
+*.so.*
 
 # Compiled Static libraries
 *.lai
@@ -26,3 +20,16 @@
 *.exe
 *.out
 *.app
+
+# cMake files
+CMakeCache.txt
+CMakeFiles
+Makefile
+cmake_install.cmake
+install_manifest.txt
+
+# compiled exe
+vss2svg-conv
+
+# out directory
+out
