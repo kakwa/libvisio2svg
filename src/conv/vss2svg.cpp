@@ -30,7 +30,7 @@
 #include <argp.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "visio2svg/SVGDrawingGenerator.h"
+#include "visio2svg/TitleGenerator.h"
 
 using namespace std;
 
@@ -85,11 +85,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
         break;
 
     case ARGP_KEY_END:
-        if (state->arg_num == 0)
-            /* Not enough arguments. */
-            argp_usage(state);
         break;
-
     default:
         return ARGP_ERR_UNKNOWN;
     }
@@ -138,7 +134,7 @@ int main(int argc, char *argv[]) {
     }
 
     librevenge::RVNGStringVector output;
-    visio2svg::SVGDrawingGenerator generator(output, NULL);
+    visio2svg::TitleGenerator generator(output);
     if (!libvisio::VisioDocument::parseStencils(&input, &generator)) {
         std::cerr << "ERROR: SVG Generation failed!" << std::endl;
         return 1;
@@ -147,16 +143,16 @@ int main(int argc, char *argv[]) {
         std::cerr << "ERROR: No SVG document generated!" << std::endl;
         return 1;
     }
-    std::string outputdir(arguments.output);
-    mkdir(arguments.output, S_IRWXU);
+    // std::string outputdir(arguments.output);
+    // mkdir(arguments.output, S_IRWXU);
     for (unsigned k = 0; k < output.size(); ++k) {
-        ofstream myfile;
-
-        std::basic_string<char> newfilename =
-            outputdir + "/image-" + std::to_string(k) + ".svg";
-        myfile.open(newfilename);
-        myfile << output[k].cstr() << std::endl;
-        myfile.close();
+        // ofstream myfile;
+        std::cout << output[k].cstr() << "\n";
+        // std::basic_string<char> newfilename =
+        //    outputdir + "/image-" + std::to_string(k) + ".svg";
+        // myfile.open(newfilename);
+        // myfile << output[k].cstr() << std::endl;
+        // myfile.close();
     }
 
     return 0;

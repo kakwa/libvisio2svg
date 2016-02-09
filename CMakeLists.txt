@@ -61,12 +61,12 @@ include_directories(
 )
 
 
-add_library(SVGDrawingGenerator
+add_library(TitleGenerator
     ${SHARED}
-    src/lib/visio2svg/SVGDrawingGenerator.cpp
+    src/lib/visio2svg/TitleGenerator.cpp
 )
 
-set_target_properties(SVGDrawingGenerator
+set_target_properties(TitleGenerator
     PROPERTIES
     VERSION ${vss2svg_VERSION}
     SOVERSION ${vss2svg_VERSION_MAJOR}
@@ -74,11 +74,11 @@ set_target_properties(SVGDrawingGenerator
 
 add_executable(vss2svg-conv src/conv/vss2svg.cpp)
 
-target_link_libraries(vss2svg-conv revenge-0.0 visio-0.1 revenge-stream-0.0 emf2svg SVGDrawingGenerator)
+target_link_libraries(vss2svg-conv revenge-0.0 visio-0.1 revenge-stream-0.0 emf2svg TitleGenerator)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-INSTALL(FILES inc/SVGDrawingGenerator.h DESTINATION "include")
-INSTALL(TARGETS vss2svg-conv SVGDrawingGenerator ${MEMSTREAMLIB}
+INSTALL(DIRECTORY inc/visio2svg DESTINATION "include")
+INSTALL(TARGETS vss2svg-conv TitleGenerator ${MEMSTREAMLIB}
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
