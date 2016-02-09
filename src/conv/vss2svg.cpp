@@ -52,7 +52,7 @@ static char args_doc[] = "[options] -i <in vss> -o <out dir>";
 
 struct arguments {
     char *args[2]; /* arg1 & arg2 */
-    bool version, svg, verbose, yed;
+    bool version, verbose;
     char *output;
     char *input;
 };
@@ -98,6 +98,8 @@ static struct argp argp = {options, parse_opt, args_doc, doc};
 int main(int argc, char *argv[]) {
     struct arguments arguments;
     arguments.version = 0;
+    arguments.output = NULL;
+    arguments.input = NULL;
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
     librevenge::RVNGFileStream input(arguments.input);
@@ -165,7 +167,6 @@ int main(int argc, char *argv[]) {
 
     for (unsigned k = 0; k < output.size(); ++k) {
         ofstream myfile;
-        //std::cout << output_names[k].cstr() << "\n";
         std::basic_string<char> newfilename = outputdir + "/" + output_names[k].cstr()  + ".svg";
         myfile.open(newfilename);
         myfile << output[k].cstr() << std::endl;
