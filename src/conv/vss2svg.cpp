@@ -133,26 +133,43 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    librevenge::RVNGStringVector output;
-    visio2svg::TitleGenerator generator(output);
-    if (!libvisio::VisioDocument::parseStencils(&input, &generator)) {
+    librevenge::RVNGStringVector output_names;
+    visio2svg::TitleGenerator generator_names(output_names);
+
+    if (!libvisio::VisioDocument::parseStencils(&input, &generator_names)) {
         std::cerr << "ERROR: SVG Generation failed!" << std::endl;
         return 1;
     }
-    if (output.empty()) {
+    if (output_names.empty()) {
         std::cerr << "ERROR: No SVG document generated!" << std::endl;
         return 1;
     }
-    // std::string outputdir(arguments.output);
-    // mkdir(arguments.output, S_IRWXU);
+
+    librevenge::RVNGStringVector output;
+    librevenge::RVNGSVGDrawingGenerator generator(output, NULL);
+    if (!libvisio::VisioDocument::parseStencils(&input, &generator))
+    {
+      std::cerr << "ERROR: SVG Generation failed!" << std::endl;
+      return 1;
+    }
+    if (output.empty())
+    {
+      std::cerr << "ERROR: No SVG document generated!" << std::endl;
+      return 1;
+    }
+
+    mkdir(arguments.output, S_IRWXU);
+
+    std::string outputdir(arguments.output);
+    mkdir(arguments.output, S_IRWXU);
+
     for (unsigned k = 0; k < output.size(); ++k) {
-        // ofstream myfile;
-        std::cout << output[k].cstr() << "\n";
-        // std::basic_string<char> newfilename =
-        //    outputdir + "/image-" + std::to_string(k) + ".svg";
-        // myfile.open(newfilename);
-        // myfile << output[k].cstr() << std::endl;
-        // myfile.close();
+        ofstream myfile;
+        //std::cout << output_names[k].cstr() << "\n";
+        std::basic_string<char> newfilename = outputdir + "/" + output_names[k].cstr()  + ".svg";
+        myfile.open(newfilename);
+        myfile << output[k].cstr() << std::endl;
+        myfile.close();
     }
 
     return 0;
