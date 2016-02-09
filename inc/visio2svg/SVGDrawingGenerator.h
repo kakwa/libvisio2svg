@@ -4,17 +4,16 @@
 
 #include <librevenge/RVNGDrawingInterface.h>
 #include <librevenge/RVNGStringVector.h>
-#include <librevenge/librevenge/RVNGSVGDrawingGenerator.h>
+#include <librevenge/RVNGSVGDrawingGenerator.h>
 
 namespace visio2svg {
 
-struct SVGDrawingGeneratorPrivate;
-
 class REVENGE_API SVGDrawingGenerator
-    : public librevenge::SVGDrawingGenerator {
+    : public librevenge::RVNGSVGDrawingGenerator {
+public:
+	void drawGraphicObject(
+			    const librevenge::RVNGPropertyList &propList);
 };
 }
-
-//#endif // librevenge::RVNGSVGDRAWINGGENERATOR_H
 
 /* vim:set shiftwidth=4 softtabstop=4 noexpandtab: */
