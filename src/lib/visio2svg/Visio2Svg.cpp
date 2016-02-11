@@ -62,12 +62,6 @@ int Visio2Svg::vss2svg(std::string &in,
         std::pair<std::string, std::string> item(output_names[k].cstr(),
                                                  output[k].cstr());
         out.insert(item);
-        // ofstream myfile;
-        // std::basic_string<char> newfilename = outputdir + "/" +
-        // output_names[k].cstr()  + ".svg";
-        // myfile.open(newfilename);
-        // myfile << output[k].cstr() << std::endl;
-        // myfile.close();
     }
     return 0;
 }
