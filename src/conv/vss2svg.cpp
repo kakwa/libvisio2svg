@@ -149,15 +149,13 @@ int main(int argc, char *argv[]) {
 
     librevenge::RVNGStringVector output;
     librevenge::RVNGSVGDrawingGenerator generator(output, NULL);
-    if (!libvisio::VisioDocument::parseStencils(&input, &generator))
-    {
-      std::cerr << "ERROR: SVG Generation failed!" << std::endl;
-      return 1;
+    if (!libvisio::VisioDocument::parseStencils(&input, &generator)) {
+        std::cerr << "ERROR: SVG Generation failed!" << std::endl;
+        return 1;
     }
-    if (output.empty())
-    {
-      std::cerr << "ERROR: No SVG document generated!" << std::endl;
-      return 1;
+    if (output.empty()) {
+        std::cerr << "ERROR: No SVG document generated!" << std::endl;
+        return 1;
     }
 
     mkdir(arguments.output, S_IRWXU);
@@ -167,7 +165,8 @@ int main(int argc, char *argv[]) {
 
     for (unsigned k = 0; k < output.size(); ++k) {
         ofstream myfile;
-        std::basic_string<char> newfilename = outputdir + "/" + output_names[k].cstr()  + ".svg";
+        std::basic_string<char> newfilename =
+            outputdir + "/" + output_names[k].cstr() + ".svg";
         myfile.open(newfilename);
         myfile << output[k].cstr() << std::endl;
         myfile.close();
