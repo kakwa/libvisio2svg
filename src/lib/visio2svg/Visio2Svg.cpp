@@ -3,9 +3,8 @@
 #include <unordered_map>
 #include <iostream>
 #include <string>
-#include <sstream>
 #include <stdio.h>
-#include <string.h>
+#include <sstream>
 #include <librevenge-stream/librevenge-stream.h>
 #include <librevenge-generators/librevenge-generators.h>
 #include <librevenge/librevenge.h>
@@ -63,7 +62,7 @@ int Visio2Svg::vss2svg(std::string &in,
     }
 
     for (unsigned k = 0; k < output.size(); ++k) {
-        char *post_treated;
+        unsigned char *post_treated;
         postTreatement(&output[k], &output_names[k], &post_treated);
         std::pair<std::string, std::string> item(output_names[k].cstr(),
                                                  output[k].cstr());
@@ -76,10 +75,35 @@ int Visio2Svg::vsd2svg(std::string &in,
     return 0;
 }
 
+static void convert_iterator(xmlDocPtr doc, xmlNode * a_node, int level, std::stringstream *out) {
+    xmlNode *cur_node = NULL;
+
+    for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
+        if ((!xmlStrcmp(cur_node->name, (const xmlChar *)"image"))){
+            xmlUnlinkNode(cur_node);
+            xmlFreeNode(cur_node);
+            //printf("img node type: Element, name: %s\n", cur_node->name);
+        }else{
+            //printf("node type: Element, name: %s\n", cur_node->name);
+        }
+
+        convert_iterator(doc, cur_node->children, (level + 1), out);
+    }
+}
+
+
 void Visio2Svg::postTreatement(const librevenge::RVNGString *in,
-                               const librevenge::RVNGString *name, char **out) {
+                               const librevenge::RVNGString *name, unsigned char **out) {
+    std::stringstream buffout;
     xmlDocPtr doc;
+    xmlNode *root_element = NULL;
     doc = xmlReadMemory(in->cstr(), in->size(), name->cstr(), NULL, 0);
+    root_element = xmlDocGetRootElement(doc);
+    convert_iterator(doc, root_element, 0, &buffout);
+    xmlBufferPtr nodeBuffer = xmlBufferCreate();
+    xmlNodeDump(nodeBuffer, doc, root_element, 0, 1);
+    *out = nodeBuffer->content;
+    std::cout << *out << std::endl;
     xmlFreeDoc(doc);
 }
 }
