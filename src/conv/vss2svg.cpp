@@ -31,6 +31,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "visio2svg/TitleGenerator.h"
+#include "visio2svg/Visio2Svg.h"
+#include <unordered_map>
 
 using namespace std;
 
@@ -121,54 +123,30 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    std::ifstream in(arguments.input);
-    if (!in.is_open()) {
+    std::ifstream stin(arguments.input);
+    if (!stin.is_open()) {
         std::cerr << "[ERROR] "
                   << "Impossible to open input file '" << arguments.input
                   << "'\n";
         return 1;
     }
+    std::string in((std::istreambuf_iterator<char>(stin)),
+                   std::istreambuf_iterator<char>());
 
-    if (!libvisio::VisioDocument::isSupported(&input)) {
-        std::cerr << "ERROR: Unsupported file format (unsupported version) or "
-                     "file is encrypted!" << std::endl;
-        return 1;
-    }
+    visio2svg::Visio2Svg converter;
+    std::unordered_map<std::string, std::string> out;
 
-    librevenge::RVNGStringVector output_names;
-    visio2svg::TitleGenerator generator_names(output_names);
-
-    if (!libvisio::VisioDocument::parseStencils(&input, &generator_names)) {
-        std::cerr << "ERROR: SVG Generation failed!" << std::endl;
-        return 1;
-    }
-    if (output_names.empty()) {
-        std::cerr << "ERROR: No SVG document generated!" << std::endl;
-        return 1;
-    }
-
-    librevenge::RVNGStringVector output;
-    librevenge::RVNGSVGDrawingGenerator generator(output, NULL);
-    if (!libvisio::VisioDocument::parseStencils(&input, &generator)) {
-        std::cerr << "ERROR: SVG Generation failed!" << std::endl;
-        return 1;
-    }
-    if (output.empty()) {
-        std::cerr << "ERROR: No SVG document generated!" << std::endl;
-        return 1;
-    }
-
-    mkdir(arguments.output, S_IRWXU);
+    converter.vss2svg(in, out);
 
     std::string outputdir(arguments.output);
     mkdir(arguments.output, S_IRWXU);
 
-    for (unsigned k = 0; k < output.size(); ++k) {
+    for (const auto &rule_pair : out) {
         ofstream myfile;
         std::basic_string<char> newfilename =
-            outputdir + "/" + output_names[k].cstr() + ".svg";
+            outputdir + "/" + rule_pair.first + ".svg";
         myfile.open(newfilename);
-        myfile << output[k].cstr() << std::endl;
+        myfile << rule_pair.second << std::endl;
         myfile.close();
     }
 
