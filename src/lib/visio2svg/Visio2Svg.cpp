@@ -17,13 +17,17 @@
 #include <sys/stat.h>
 #include "visio2svg/TitleGenerator.h"
 #include "visio2svg/Visio2Svg.h"
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 
 namespace visio2svg {
 
 Visio2Svg::Visio2Svg() {
 }
+
 Visio2Svg::~Visio2Svg() {
 }
+
 int Visio2Svg::vss2svg(std::string &in,
                        std::unordered_map<std::string, std::string> &out) {
     librevenge::RVNGStringStream input((const unsigned char *)in.c_str(),
@@ -59,6 +63,8 @@ int Visio2Svg::vss2svg(std::string &in,
     }
 
     for (unsigned k = 0; k < output.size(); ++k) {
+        char *post_treated;
+        postTreatement(&output[k], &output_names[k], &post_treated);
         std::pair<std::string, std::string> item(output_names[k].cstr(),
                                                  output[k].cstr());
         out.insert(item);
@@ -69,7 +75,12 @@ int Visio2Svg::vsd2svg(std::string &in,
                        std::unordered_map<std::string, std::string> &out) {
     return 0;
 }
-void Visio2Svg::postTreatement() {
+
+void Visio2Svg::postTreatement(const librevenge::RVNGString *in,
+                               const librevenge::RVNGString *name, char **out) {
+    xmlDocPtr doc;
+    doc = xmlReadMemory(in->cstr(), in->size(), name->cstr(), NULL, 0);
+    xmlFreeDoc(doc);
 }
 }
 

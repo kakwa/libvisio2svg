@@ -55,6 +55,7 @@ include_directories(
     /usr/local/include/
     /usr/include/
     /usr/include/librevenge-0.0/
+    /usr/include/libxml2/
     /usr/local/include/librevenge-0.0/
     /usr/include/libvisio-0.1/
     /usr/local/include/libvisio-0.1/
@@ -91,6 +92,7 @@ target_link_libraries(vss2svg-conv
     revenge-stream-0.0
     emf2svg
     TitleGenerator
+    Visio2Svg
 )
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
