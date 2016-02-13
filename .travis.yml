@@ -1,6 +1,7 @@
+env:
+  - CXX="g++-4.8" 
+  - CC="gcc-4.8"
 install:
-  - export CXX="g++-4.8"
-  - export CC="gcc-4.8"
   - git clone https://github.com/kakwa/libemf2svg
   - cd libemf2svg && cmake . -DFORCELE=ON -DCMAKE_INSTALL_PREFIX=/usr/ && make && sudo make install && cd -
   - git clone http://git.code.sf.net/p/libwpd/librevenge
