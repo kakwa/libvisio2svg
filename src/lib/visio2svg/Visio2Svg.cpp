@@ -146,8 +146,11 @@ int base64decode(char *in, size_t inLen, unsigned char *out, size_t *outLen) {
 
 static void convert_iterator(xmlNode *a_node) {
     xmlNode *cur_node = NULL;
+    xmlNode *next_node;
 
-    for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
+    for (cur_node = a_node; cur_node;) {
+        next_node = cur_node->next;
+
         if ((!xmlStrcmp(cur_node->name, (const xmlChar *)"image"))) {
             xmlAttr *attribute = cur_node->properties;
             double x = 0;
@@ -246,6 +249,7 @@ static void convert_iterator(xmlNode *a_node) {
         } else {
             convert_iterator(cur_node->children);
         }
+        cur_node = next_node;
     }
 }
 
