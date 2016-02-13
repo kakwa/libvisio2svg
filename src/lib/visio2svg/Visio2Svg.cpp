@@ -252,11 +252,11 @@ static void convert_iterator(xmlNode *a_node) {
                 xmlNode *root_element = NULL;
                 doc = xmlReadMemory(svg_out, strlen(svg_out), NULL, NULL, 0);
                 root_element = xmlDocGetRootElement(doc);
+                //// insert new nodes
                 xmlAddChildList(node, root_element->children);
                 xmlAddChildList(cur_node->parent, node);
                 //// remove image node
                 xmlUnlinkNode(cur_node);
-                //// insert new nodes
 
                 //// freeing some memory
                 xmlFreeNode(cur_node);
