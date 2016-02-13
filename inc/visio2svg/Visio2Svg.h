@@ -18,7 +18,7 @@ class Visio2Svg {
 
   private:
     void postTreatement(const librevenge::RVNGString *in,
-                        const librevenge::RVNGString *name, unsigned char **out);
+                        const librevenge::RVNGString *name, char **out);
 };
 }
 
