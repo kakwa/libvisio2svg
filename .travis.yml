@@ -1,0 +1,44 @@
+install:
+  - export CXX="g++-4.8"
+  - export CC="gcc-4.8"
+  - git clone https://github.com/kakwa/libemf2svg
+  - cd libemf2svg && cmake . -DFORCELE=ON -DCMAKE_INSTALL_PREFIX=/usr/ && make && sudo make install && cd -
+  - git clone http://git.code.sf.net/p/libwpd/librevenge
+  - cd librevenge && ./autogen.sh && ./configure --prefix=/usr/ && make && sudo make install && cd -
+  - git clone https://github.com/LibreOffice/libvisio
+  - cd libvisio && ./autogen.sh && ./configure --prefix=/usr/ && make && sudo make install && cd -
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - gcc-4.8
+    - g++-4.8
+    - libtool
+    - automake
+    - autotools-dev
+    - clang
+    - cmake
+    - libboost-all-dev
+    - zlib1g-dev
+    - time
+    - valgrind
+    - libxml2-utils
+    - libpolyclipping-dev
+    - librevenge-dev 
+    - libvisio-dev
+    - libc6-dev
+    - libcppunit-dev
+    - gperf
+    - libicu-dev
+    - libxml2-dev
+    - perl
+    - gcc
+    - g++
+
+language: cpp
+
+compiler: gcc
+
+script: cmake . && make #&& ./tests/resources/check_correctness.sh
