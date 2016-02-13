@@ -239,6 +239,7 @@ static void convert_iterator(xmlNode *a_node) {
                 int ret = 0;
                 ret = base64decode((char *)(imgb64 + 22), (len - 22),
                                    emf_content, &emf_size);
+                xmlFree(imgb64);
                 if (ret)
                     std::cerr << "ERROR: Base64 decode failed" << std::endl;
 
