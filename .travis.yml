@@ -1,4 +1,5 @@
 install:
+  - export 
   - git clone https://github.com/kakwa/libemf2svg
   - cd libemf2svg && cmake . -DFORCELE=ON -DCMAKE_INSTALL_PREFIX=/usr/ && make && sudo make install && cd -
   - git clone http://git.code.sf.net/p/libwpd/librevenge
@@ -6,51 +7,47 @@ install:
   - git clone https://github.com/LibreOffice/libvisio
   - cd libvisio && ./autogen.sh && ./configure --prefix=/usr/ && make && sudo make install && cd -
 
-language: cpp
-
 # Save common build configurations as shortcuts, so we can reference them later.
 addons_shortcuts:
   addons_clang38: &clang38
     apt:
       sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-precise' ]
-      packages: [ 'clang-3.8', 'libprotobuf-dev','protobuf-compiler' ]
-  addons_gcc49: &gcc5
+      packages: [ 'clang-3.8']
+  addons_gcc5: &gcc5
     apt:
       sources: [ 'ubuntu-toolchain-r-test' ]
-      packages: [ 'g++-5', 'gcc-5', 'libprotobuf-dev','protobuf-compiler' ]
+      packages: [ 'g++-5', 'gcc-5' ]
 
 matrix:
   include:
     - os: linux
-      compiler: "clang38"
+      compiler: "clang-3.8"
       env: CXX=clang++-3.8 CC=clang-3.8
       addons: *clang38
     - os: linux
-      compiler: "gcc5"
+      compiler: "gcc-5"
       env: CXX=g++-5 CC=gcc-5
       addons: *gcc5
 
 addons:
   apt:
     sources:
-    - ubuntu-toolchain-r-test
+      - ubuntu-toolchain-r-test
     packages:
-    - libtool
-    - automake
-    - autotools-dev
-    - cmake
-    - libboost-all-dev
-    - zlib1g-dev
-    - time
-    - valgrind
-    - libxml2-utils
-    - libc6-dev
-    - libcppunit-dev
-    - gperf
-    - libicu-dev
-    - libxml2-dev
-    - perl
-
-language: cpp
+      - libtool
+      - automake
+      - autotools-dev
+      - cmake
+      - libboost-dev
+      - zlib1g-dev
+      - time
+      - valgrind
+      - libxml2-utils
+      - libc6-dev
+      - libcppunit-dev
+      - gperf
+      - libicu-dev
+      - libxml2-dev
+      - perl
 
 script: cmake . && make #&& ./tests/resources/check_correctness.sh
