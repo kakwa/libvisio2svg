@@ -185,17 +185,39 @@ static void convert_iterator(xmlNode *a_node) {
             if ((!xmlStrncmp(imgb64, (const xmlChar *)"data:image/emf;base64,",
                              22))) {
                 xmlAttr *attribute = cur_node->properties;
-                xmlNode *node = xmlNewNode(NULL, (const xmlChar *)"toto");
+                xmlNode *node = xmlNewNode(NULL, (const xmlChar *)"g");
                 xmlCopyPropList(node, attribute);
+
+                size_t tlen =
+                    (size_t)snprintf(NULL, 0, " translate(%f,%f)  ", x, y);
+                char *translate = (char *)malloc(tlen);
+
+                tlen = snprintf(translate, tlen, " translate(%f,%f)  ", x, y);
+                bool translate_set = false;
+
                 while (attribute) {
-                    printf("%s\n", attribute->name);
                     xmlCopyProp(node, attribute);
-                    if (xmlStrcmp(attribute->name, (const xmlChar *)"href")) {
-                        xmlNewProp(node, attribute->name,
-                                   xmlNodeListGetString(
-                                       cur_node->doc, attribute->children, 1));
+                    if (xmlStrcmp(attribute->name, (const xmlChar *)"href") &&
+                        xmlStrcmp(attribute->name, (const xmlChar *)"x") &&
+                        xmlStrcmp(attribute->name, (const xmlChar *)"y") &&
+                        xmlStrcmp(attribute->name, (const xmlChar *)"width") &&
+                        xmlStrcmp(attribute->name, (const xmlChar *)"height")) {
+                        xmlChar *value = xmlNodeListGetString(
+                            cur_node->doc, attribute->children, 1);
+                        if ((!xmlStrcmp(attribute->name,
+                                        (const xmlChar *)"transform"))) {
+                            translate_set = true;
+                            value = xmlStrncat(
+                                value, (const xmlChar *)translate, tlen);
+                        }
+                        xmlNewProp(node, attribute->name, value);
                     }
                     attribute = attribute->next;
+                }
+
+                if (!(translate_set)) {
+                    xmlNewProp(node, (const xmlChar *)"transform",
+                               (const xmlChar *)translate);
                 }
 
                 // configure generator options
@@ -218,8 +240,6 @@ static void convert_iterator(xmlNode *a_node) {
                 int ret = 0;
                 ret = base64decode((char *)(imgb64 + 22), (len - 22),
                                    emf_content, &emf_size);
-                // printf("%s\n", (imgb64 + 21));
-
                 if (ret)
                     std::cerr << "ERROR: Base64 decode failed" << std::endl;
 
@@ -261,6 +281,8 @@ void Visio2Svg::postTreatement(const librevenge::RVNGString *in,
     doc = xmlReadMemory(in->cstr(), in->size(), name->cstr(), NULL, 0);
     root_element = xmlDocGetRootElement(doc);
     convert_iterator(root_element);
+    // xmlNewChild(root_element, NULL, (const xmlChar *)"title", (const xmlChar
+    // *)name->cstr());
     xmlBufferPtr nodeBuffer = xmlBufferCreate();
     xmlNodeDump(nodeBuffer, doc, root_element, 0, 1);
     *out = (char *)nodeBuffer->content;
