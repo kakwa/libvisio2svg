@@ -8,7 +8,7 @@ Library/Utilities to convert Microsoft (MS) Visio Documents and Stencils (VSS an
 Motivation
 ==========
 
-There are tons of publicly available stencils, for example 
+There are tons of publicly available MS Visio stencils, for example 
 [the Cisco ones](http://www.cisco.com/c/en/us/products/visio-stencil-listing.html) 
 or the stencils from [VisioCafe](http://www.visiocafe.com/).
 
@@ -25,7 +25,7 @@ About libemf2svg
 [libemf2svg](https://github.com/kakwa/libemf2svg) is another library of mine.
 It was developed to handle MS EMF (Enhanced Metafile) blobs which constitute most of Visio VSS shapes.
 
-Librevenge/Libvisio would otherwise only bump the EMF blob in an \<image\> SVG tag, which most viewer/editor/browser
+Librevenge/Libvisio would otherwise only bump the EMF blob as base64 in an \<image\> SVG tag, which most viewer/editor/browser
 would be unable to display.
 
 License
