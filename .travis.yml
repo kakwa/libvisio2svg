@@ -1,6 +1,5 @@
 env:
-  - CXX="g++-4.8" 
-  - CC="gcc-4.8"
+  - CXX="g++-4.8" CC="gcc-4.8"
 install:
   - git clone https://github.com/kakwa/libemf2svg
   - cd libemf2svg && cmake . -DFORCELE=ON -DCMAKE_INSTALL_PREFIX=/usr/ && make && sudo make install && cd -
