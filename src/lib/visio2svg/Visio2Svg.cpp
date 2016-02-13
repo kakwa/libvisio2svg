@@ -1,21 +1,19 @@
 /* -*- Mode: C++; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4 -*- */
 
+#include "visio2svg/TitleGenerator.h"
+#include "visio2svg/Visio2Svg.h"
 #include <unordered_map>
 #include <iostream>
 #include <string>
 #include <stdio.h>
 #include <sstream>
+#include <librevenge/librevenge.h>
 #include <librevenge-stream/librevenge-stream.h>
 #include <librevenge-generators/librevenge-generators.h>
-#include <librevenge/librevenge.h>
 #include <libvisio/libvisio.h>
 #include <string>
 #include <stdlib.h>
-#include <argp.h>
 #include <sys/types.h>
-#include <sys/stat.h>
-#include "visio2svg/TitleGenerator.h"
-#include "visio2svg/Visio2Svg.h"
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <emf2svg.h>

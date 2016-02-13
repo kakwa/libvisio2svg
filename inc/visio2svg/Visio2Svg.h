@@ -1,5 +1,6 @@
 /* -*- Mode: C++; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4 -*- */
 
+#include <librevenge/librevenge.h>
 #include <unordered_map>
 #include <istream>
 #include <iostream>
