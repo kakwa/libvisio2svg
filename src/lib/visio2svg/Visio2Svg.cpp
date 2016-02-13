@@ -225,7 +225,7 @@ static void convert_iterator(xmlNode *a_node) {
                 options->emfplus = true;
                 //// options->nameSpace = (char *)"svg";
                 options->nameSpace = NULL;
-                options->svgDelimiter = true;
+                options->svgDelimiter = false;
                 options->imgWidth = width;
                 options->imgHeight = height;
 
@@ -249,10 +249,13 @@ static void convert_iterator(xmlNode *a_node) {
                     std::cerr << "ERROR: Failed to convert emf" << std::endl;
                 xmlDocPtr doc;
                 xmlNode *root_element = NULL;
-                doc = xmlReadMemory(svg_out, strlen(svg_out), NULL, NULL, 0);
+                doc = xmlReadMemory(svg_out, strlen(svg_out), NULL, NULL,
+                                    XML_PARSE_RECOVER | XML_PARSE_NOBLANKS |
+                                        XML_PARSE_NONET | XML_PARSE_NOERROR);
                 root_element = xmlDocGetRootElement(doc);
                 //// insert new nodes
-                // xmlAddChildList(node, root_element->children);
+                xmlNode *emf_svg = xmlCopyNodeList(root_element);
+                xmlAddChildList(node, emf_svg);
                 xmlAddChildList(cur_node->parent, node);
                 //// remove image node
                 xmlUnlinkNode(cur_node);
@@ -279,7 +282,9 @@ void Visio2Svg::postTreatement(const librevenge::RVNGString *in,
                                const librevenge::RVNGString *name, char **out) {
     xmlDocPtr doc;
     xmlNode *root_element = NULL;
-    doc = xmlReadMemory(in->cstr(), in->size(), name->cstr(), NULL, 0);
+    doc =
+        xmlReadMemory(in->cstr(), in->size(), name->cstr(), NULL,
+                      XML_PARSE_RECOVER | XML_PARSE_NOBLANKS | XML_PARSE_NONET);
     root_element = xmlDocGetRootElement(doc);
     convert_iterator(root_element);
     // xmlNewChild(root_element, NULL, (const xmlChar *)"title", (const xmlChar
