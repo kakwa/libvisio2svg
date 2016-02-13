@@ -20,6 +20,9 @@
 #include <libxml/tree.h>
 #include <emf2svg.h>
 
+#define VISIOVSS 1
+#define VISIOVSD 2
+
 namespace visio2svg {
 
 Visio2Svg::Visio2Svg() {
@@ -30,6 +33,13 @@ Visio2Svg::~Visio2Svg() {
 
 int Visio2Svg::vss2svg(std::string &in,
                        std::unordered_map<std::string, std::string> &out) {
+    visio2svg(in, out, 1.0, VISIOVSS);
+    return 0;
+}
+
+int Visio2Svg::visio2svg(std::string &in,
+                         std::unordered_map<std::string, std::string> &out,
+                         double scaling, int mode) {
     librevenge::RVNGStringStream input((const unsigned char *)in.c_str(),
                                        in.size());
 
@@ -53,7 +63,13 @@ int Visio2Svg::vss2svg(std::string &in,
 
     librevenge::RVNGStringVector output;
     librevenge::RVNGSVGDrawingGenerator generator(output, NULL);
-    if (!libvisio::VisioDocument::parseStencils(&input, &generator)) {
+    int ret;
+    if (mode == VISIOVSS) {
+        ret = libvisio::VisioDocument::parseStencils(&input, &generator);
+    } else {
+        ret = libvisio::VisioDocument::parse(&input, &generator);
+    }
+    if (!ret) {
         std::cerr << "ERROR: SVG Generation failed!" << std::endl;
         return 1;
     }
@@ -75,6 +91,7 @@ int Visio2Svg::vss2svg(std::string &in,
 }
 int Visio2Svg::vsd2svg(std::string &in,
                        std::unordered_map<std::string, std::string> &out) {
+    visio2svg(in, out, 1.0, VISIOVSD);
     return 0;
 }
 
