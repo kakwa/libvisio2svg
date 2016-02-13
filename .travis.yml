@@ -12,11 +12,11 @@ addons_shortcuts:
   addons_clang38: &clang38
     apt:
       sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-precise' ]
-      packages: [ 'clang-3.8', 'libboost-dev', 'libxml2-dev', 'valgrind', 'cmake']
+      packages: [ 'clang-3.8', 'libboost-dev', 'libxml2-dev', 'valgrind', 'cmake', 'libcppunit-dev' ]
   addons_gcc5: &gcc5
     apt:
       sources: [ 'ubuntu-toolchain-r-test' ]
-      packages: [ 'g++-5', 'gcc-5', 'libboost-dev', 'libxml2-dev', 'valgrind', 'cmake' ]
+      packages: [ 'g++-5', 'gcc-5', 'libboost-dev', 'libxml2-dev', 'valgrind', 'cmake', 'libcppunit-dev' ]
 
 matrix:
   include:
