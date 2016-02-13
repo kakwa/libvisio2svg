@@ -3,7 +3,30 @@ Libvisio2svg
 
 Library/Utilities to convert Microsoft (MS) Visio documents (VSS and VSD) to SVG.
 
-[![Build Status](https://travis-ci.org/kakwa/libvisio2svg.svg?branch=master)](https://travis-ci.org/kakwa/vss2svg)
+[![Build Status](https://travis-ci.org/kakwa/libvisio2svg.svg?branch=master)](https://travis-ci.org/kakwa/libvisio2svg)
+
+Motivation
+==========
+
+This library/utilities were created to be able to convert public Visio stencils to SVG
+and reuse them outside of Microsoft Visio, in programs like 
+[yEd](https://www.yworks.com/products/yed), [Inkscape](https://inkscape.org), 
+[Dia](http://dia-installer.de/), [Calligra Flow](https://www.calligra.org/flow/)...
+
+This library is mainly the glue between [librevenge](http://sourceforge.net/p/libwpd/wiki/librevenge/)/[libvisio](https://github.com/LibreOffice/libvisio) and [libemf2svg](https://github.com/kakwa/libemf2svg).
+
+About libemf2svg
+----------------
+
+[libemf2svg](https://github.com/kakwa/libemf2svg) is another library of mine.
+It was developped to handle MS EMF (Enhanced Metafile) blobs which constitute most of Visio VSS shapes.
+Librevenge/Libvisio would otherwise only bump the EMF blob in an <image> svg tag, which most viewer/editor/browser
+would be unable to display.
+
+License
+=======
+
+Libvisio2svg is licensed under GPLv2.
 
 Dependencies
 ============
