@@ -163,24 +163,23 @@ static void convert_iterator(xmlNode *a_node) {
                     xmlNodeListGetString(cur_node->doc, attribute->children, 1);
                 if ((!xmlStrcmp(attribute->name, (const xmlChar *)"x"))) {
                     x = atof((const char *)value);
-                    xmlFree(value);
                 }
                 if ((!xmlStrcmp(attribute->name, (const xmlChar *)"y"))) {
                     y = atof((const char *)value);
-                    xmlFree(value);
                 }
                 if ((!xmlStrcmp(attribute->name, (const xmlChar *)"width"))) {
                     width = atof((const char *)value);
-                    xmlFree(value);
                 }
                 if ((!xmlStrcmp(attribute->name, (const xmlChar *)"height"))) {
                     height = atof((const char *)value);
-                    xmlFree(value);
                 }
                 if ((!xmlStrcmp(attribute->name, (const xmlChar *)"href"))) {
                     imgb64 = value;
+                    attribute = attribute->next;
+                    continue;
                 }
                 attribute = attribute->next;
+                xmlFree(value);
             }
             if ((!xmlStrncmp(imgb64, (const xmlChar *)"data:image/emf;base64,",
                              22))) {
