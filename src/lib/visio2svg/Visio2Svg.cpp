@@ -240,6 +240,7 @@ static void convert_iterator(xmlNode *a_node) {
                 ret = base64decode((char *)(imgb64 + 22), (len - 22),
                                    emf_content, &emf_size);
                 xmlFree(imgb64);
+                imgb64 = NULL;
                 if (ret)
                     std::cerr << "ERROR: Base64 decode failed" << std::endl;
 
@@ -258,14 +259,14 @@ static void convert_iterator(xmlNode *a_node) {
                 //// insert new nodes
 
                 //// freeing some memory
-                // xmlFreeNode(cur_node);
-                // free(emf_content);
-                // free(options);
-                // free(svg_out);
+                xmlFreeNode(cur_node);
+                free(emf_content);
+                free(options);
+                free(svg_out);
             } else {
                 convert_iterator(cur_node->children);
             }
-            // free(imgb64);
+            free(imgb64);
         } else {
             convert_iterator(cur_node->children);
         }
@@ -275,7 +276,6 @@ static void convert_iterator(xmlNode *a_node) {
 
 void Visio2Svg::postTreatement(const librevenge::RVNGString *in,
                                const librevenge::RVNGString *name, char **out) {
-    std::stringstream buffout;
     xmlDocPtr doc;
     xmlNode *root_element = NULL;
     doc = xmlReadMemory(in->cstr(), in->size(), name->cstr(), NULL, 0);
@@ -286,7 +286,6 @@ void Visio2Svg::postTreatement(const librevenge::RVNGString *in,
     xmlBufferPtr nodeBuffer = xmlBufferCreate();
     xmlNodeDump(nodeBuffer, doc, root_element, 0, 1);
     *out = (char *)nodeBuffer->content;
-    // std::cout << *out << std::endl;
     // xmlFreeDoc(doc);
 }
 }
