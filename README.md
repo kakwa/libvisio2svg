@@ -20,7 +20,7 @@ About libemf2svg
 
 [libemf2svg](https://github.com/kakwa/libemf2svg) is another library of mine.
 It was developped to handle MS EMF (Enhanced Metafile) blobs which constitute most of Visio VSS shapes.
-Librevenge/Libvisio would otherwise only bump the EMF blob in an <image> svg tag, which most viewer/editor/browser
+Librevenge/Libvisio would otherwise only bump the EMF blob in an \<image\> svg tag, which most viewer/editor/browser
 would be unable to display.
 
 License
