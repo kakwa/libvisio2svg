@@ -16,14 +16,8 @@
 
 // <<<<<<<<<<<<<<<<<<< END ORIGINAL HEADER >>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-#include <iostream>
-#include <sstream>
 #include <stdio.h>
 #include <string.h>
-#include <librevenge-stream/librevenge-stream.h>
-#include <librevenge-generators/librevenge-generators.h>
-#include <librevenge/librevenge.h>
-#include <libvisio/libvisio.h>
 #include <fstream>
 #include <string>
 #include <stdlib.h>
@@ -103,8 +97,6 @@ int main(int argc, char *argv[]) {
     arguments.output = NULL;
     arguments.input = NULL;
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
-
-    librevenge::RVNGFileStream input(arguments.input);
 
     if (arguments.version) {
         std::cout << "vss2svg version: " << V2S_VERSION << "\n";
