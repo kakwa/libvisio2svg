@@ -182,7 +182,8 @@ static void convert_iterator(xmlNode *a_node) {
                 attribute = attribute->next;
                 xmlFree(value);
             }
-            if ((!xmlStrncmp(imgb64, (const xmlChar *)"data:image/emf;base64,",
+            if (imgb64 != NULL &&
+                (!xmlStrncmp(imgb64, (const xmlChar *)"data:image/emf;base64,",
                              22))) {
                 xmlAttr *attribute = cur_node->properties;
                 xmlNode *node = xmlNewNode(NULL, (const xmlChar *)"g");
