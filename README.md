@@ -67,20 +67,27 @@ Convert VSS:
 
 ```bash
 # conversion
-$ ./vss2svg-conv -i ./tests/resources/vss/2960CX.vss -o ./tests/out/
+$ vss2svg-conv -i ./2960CX.vss -o ./out/
+
+$ ls out/
+'Cisco R42610 Front.svg'      'WS-C2960CX-8PC-L Rear.svg'   'WS-C2960CX-8TC-L Rear.svg'
+'WS-C2960CX-8PC-L Front.svg'  'WS-C2960CX-8TC-L Front.svg'
 
 # help
-$ ./vss2svg-conv --help
+$ vss2svg-conv --help
 ```
 
 Convert VSD:
 
 ```bash
 # conversion
-$ ./vsd2svg-conv -i ./tests/resources/vss/2960CX.vss -o ./tests/out/
+$ vsd2svg-conv -i ./my.VSD -o ./out/
+
+$ ls out/
+Page-1.svg  Page-2.svg  Page-3.svg  Page-4.svg
 
 # help
-$ ./vsd2svg-conv --help
+$ vsd2svg-conv --help
 ```
 
 Library
