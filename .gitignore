@@ -30,6 +30,7 @@ install_manifest.txt
 
 # compiled exe
 vss2svg-conv
+vsd2svg-conv
 
 # out directory
 out

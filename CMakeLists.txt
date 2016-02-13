@@ -95,8 +95,21 @@ target_link_libraries(vss2svg-conv
     Visio2Svg
 )
 
+add_executable(vsd2svg-conv src/conv/vsd2svg.cpp)
+
+target_link_libraries(vsd2svg-conv
+    revenge-0.0
+    visio-0.1
+    revenge-stream-0.0
+    emf2svg
+    TitleGenerator
+    Visio2Svg
+)
+
+
+
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-INSTALL(TARGETS vss2svg-conv TitleGenerator
+INSTALL(TARGETS vss2svg-conv vsd2svg-conv TitleGenerator Visio2Svg
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
