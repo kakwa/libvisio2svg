@@ -45,7 +45,7 @@ static char doc[] = "vss2svg -- Visio stencil to SVG converter";
 static struct argp_option options[] = {
     {"verbose", 'v', 0, 0, "Produce verbose output"},
     {"input", 'i', "FILE", 0, "Input Visio .vss file"},
-    {"output", 'o', "FILE/DIR", 0, "Output file (yED) or directory (svg)"},
+    {"output", 'o', "DIR", 0, "Output directory"},
     {"version", 'V', 0, 0, "Print vss2svg version"},
     {0}};
 
