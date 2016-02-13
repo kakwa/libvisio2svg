@@ -1,5 +1,3 @@
-env:
-  - CXX="g++-4.8" CC="gcc-4.8"
 install:
   - git clone https://github.com/kakwa/libemf2svg
   - cd libemf2svg && cmake . -DFORCELE=ON -DCMAKE_INSTALL_PREFIX=/usr/ && make && sudo make install && cd -
@@ -8,37 +6,50 @@ install:
   - git clone https://github.com/LibreOffice/libvisio
   - cd libvisio && ./autogen.sh && ./configure --prefix=/usr/ && make && sudo make install && cd -
 
+language: cpp
+
+# Save common build configurations as shortcuts, so we can reference them later.
+addons_shortcuts:
+  addons_clang38: &clang38
+    apt:
+      sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-precise' ]
+      packages: [ 'clang-3.8', 'libprotobuf-dev','protobuf-compiler' ]
+  addons_gcc49: &gcc5
+    apt:
+      sources: [ 'ubuntu-toolchain-r-test' ]
+      packages: [ 'g++-5', 'gcc-5', 'libprotobuf-dev','protobuf-compiler' ]
+
+matrix:
+    - os: linux
+      compiler: "clang38"
+      env: CXX=clang++-3.8 CC=clang-3.8
+      addons: *clang38
+    - os: linux
+      compiler: "gcc5"
+      env: CXX=g++-5 CC=gcc-5
+      addons: *gcc5
+
 addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
     packages:
-    - gcc-4.8
-    - g++-4.8
     - libtool
     - automake
     - autotools-dev
-    - clang
     - cmake
     - libboost-all-dev
     - zlib1g-dev
     - time
     - valgrind
     - libxml2-utils
-    - libpolyclipping-dev
-    - librevenge-dev 
-    - libvisio-dev
     - libc6-dev
     - libcppunit-dev
     - gperf
     - libicu-dev
     - libxml2-dev
     - perl
-    - gcc
-    - g++
 
 language: cpp
-
-compiler: gcc
 
 script: cmake . && make #&& ./tests/resources/check_correctness.sh
