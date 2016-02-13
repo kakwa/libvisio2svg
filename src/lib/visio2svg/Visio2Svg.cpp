@@ -68,6 +68,7 @@ int Visio2Svg::vss2svg(std::string &in,
         std::pair<std::string, std::string> item(output_names[k].cstr(),
                                                  std::string(post_treated));
         // output[k].cstr());
+        free(post_treated);
         out.insert(item);
     }
     return 0;
@@ -185,7 +186,6 @@ static void convert_iterator(xmlNode *a_node) {
                              22))) {
                 xmlAttr *attribute = cur_node->properties;
                 xmlNode *node = xmlNewNode(NULL, (const xmlChar *)"g");
-                xmlCopyPropList(node, attribute);
 
                 size_t tlen =
                     (size_t)snprintf(NULL, 0, " translate(%f,%f)  ", x, y);
@@ -195,7 +195,6 @@ static void convert_iterator(xmlNode *a_node) {
                 bool translate_set = false;
 
                 while (attribute) {
-                    xmlCopyProp(node, attribute);
                     if (xmlStrcmp(attribute->name, (const xmlChar *)"href") &&
                         xmlStrcmp(attribute->name, (const xmlChar *)"x") &&
                         xmlStrcmp(attribute->name, (const xmlChar *)"y") &&
@@ -253,7 +252,7 @@ static void convert_iterator(xmlNode *a_node) {
                 doc = xmlReadMemory(svg_out, strlen(svg_out), NULL, NULL, 0);
                 root_element = xmlDocGetRootElement(doc);
                 //// insert new nodes
-                xmlAddChildList(node, root_element->children);
+                // xmlAddChildList(node, root_element->children);
                 xmlAddChildList(cur_node->parent, node);
                 //// remove image node
                 xmlUnlinkNode(cur_node);
@@ -263,6 +262,8 @@ static void convert_iterator(xmlNode *a_node) {
                 free(emf_content);
                 free(options);
                 free(svg_out);
+                free(translate);
+                xmlFreeDoc(doc);
             } else {
                 convert_iterator(cur_node->children);
             }
@@ -286,7 +287,10 @@ void Visio2Svg::postTreatement(const librevenge::RVNGString *in,
     xmlBufferPtr nodeBuffer = xmlBufferCreate();
     xmlNodeDump(nodeBuffer, doc, root_element, 0, 1);
     *out = (char *)nodeBuffer->content;
-    // xmlFreeDoc(doc);
+    xmlFreeDoc(doc);
+    nodeBuffer->content = NULL;
+    xmlBufferFree(nodeBuffer);
+    xmlCleanupParser();
 }
 }
 
