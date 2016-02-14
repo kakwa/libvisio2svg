@@ -1,12 +1,10 @@
 install:
-  - git clone https://git.gnome.org/browse/libxml2/ 
-  - cd libxml2 && ./autogen.sh && ./configure --prefix=/usr/ && make && sudo make install && cd -
-  - git clone https://github.com/kakwa/libemf2svg
-  - cd libemf2svg && cmake . -DFORCELE=ON -DCMAKE_INSTALL_PREFIX=/usr/ && make && sudo make install && cd -
-  - git clone http://git.code.sf.net/p/libwpd/librevenge
-  - cd librevenge && ./autogen.sh && ./configure --prefix=/usr/ && make && sudo make install && cd -
-  - git clone https://github.com/LibreOffice/libvisio
-  - cd libvisio && ./autogen.sh && ./configure --prefix=/usr/ && make && sudo make install && cd -
+  - 'curl https://ftp-master.debian.org/keys/archive-key-8.0.asc | sudo apt-key add -'
+  - 'echo "deb http://http.debian.net/debian jessie-backports main" | sudo tee -a /etc/apt/sources.list'
+  - 'echo "deb http://http.debian.net/debian jessie main" | sudo tee -a /etc/apt/sources.list'
+  - 'sudo apt-get update -qq'
+  - 'DEBIAN_FRONTEND=noninteractive apt-get install librevenge-dev libvisio-dev libxml2-dev lsb-base libattr1 -t jessie -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"  -f -q -y'
+  - 'sudo rm /etc/dpkg/dpkg.cfg.d/multiarch'
 
 addons_shortcuts:
   addons_clang38: &clang38
