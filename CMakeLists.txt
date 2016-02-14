@@ -47,7 +47,6 @@ endif(STATIC)
 LINK_DIRECTORIES(
     /usr/local/lib
     /usr/lib/
-    ${CMAKE_BINARY_DIR}/
 )
 
 include_directories(
@@ -61,6 +60,8 @@ include_directories(
     /usr/local/include/libvisio-0.1/
 )
 
+add_executable(vss2svg-conv src/conv/vss2svg.cpp)
+add_executable(vsd2svg-conv src/conv/vsd2svg.cpp)
 
 add_library(TitleGenerator
     ${SHARED}
@@ -84,25 +85,25 @@ set_target_properties(TitleGenerator
     SOVERSION ${vss2svg_VERSION_MAJOR}
 )
 
-add_executable(vss2svg-conv src/conv/vss2svg.cpp)
+target_link_libraries(TitleGenerator
+    revenge-0.0
+    visio-0.1
+    revenge-stream-0.0
+)
 
-target_link_libraries(vss2svg-conv
+target_link_libraries(Visio2Svg
     revenge-0.0
     visio-0.1
     revenge-stream-0.0
     emf2svg
     TitleGenerator
+)
+
+target_link_libraries(vss2svg-conv
     Visio2Svg
 )
 
-add_executable(vsd2svg-conv src/conv/vsd2svg.cpp)
-
 target_link_libraries(vsd2svg-conv
-    revenge-0.0
-    visio-0.1
-    revenge-stream-0.0
-    emf2svg
-    TitleGenerator
     Visio2Svg
 )
 
