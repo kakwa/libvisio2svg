@@ -34,6 +34,13 @@ Visio2Svg::~Visio2Svg() {
 }
 
 int Visio2Svg::vss2svg(std::string &in,
+                       std::unordered_map<std::string, std::string> &out,
+                       double scaling) {
+    visio2svg(in, out, scaling, VISIOVSS);
+    return 0;
+}
+
+int Visio2Svg::vss2svg(std::string &in,
                        std::unordered_map<std::string, std::string> &out) {
     visio2svg(in, out, 1.0, VISIOVSS);
     return 0;
@@ -42,6 +49,13 @@ int Visio2Svg::vss2svg(std::string &in,
 int Visio2Svg::vsd2svg(std::string &in,
                        std::unordered_map<std::string, std::string> &out) {
     visio2svg(in, out, 1.0, VISIOVSD);
+    return 0;
+}
+
+int Visio2Svg::vsd2svg(std::string &in,
+                       std::unordered_map<std::string, std::string> &out,
+                       double scaling) {
+    visio2svg(in, out, scaling, VISIOVSD);
     return 0;
 }
 
