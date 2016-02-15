@@ -25,7 +25,7 @@ class Visio2Svg {
 
   private:
     void postTreatement(const librevenge::RVNGString *in,
-                        const librevenge::RVNGString *name, char **out);
+                        const librevenge::RVNGString *name, char **out, double scaling);
     int visio2svg(std::string &in,
                   std::unordered_map<std::string, std::string> &out,
                   double scaling, int mode);
