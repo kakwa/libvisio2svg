@@ -365,6 +365,12 @@ void Visio2Svg::scale_title(xmlNode **root, xmlDocPtr *doc, double scaling, cons
         attribute = attribute->next;
         xmlFree(value);
     }
+
+    xmlNsPtr ns = (*root)->nsDef;
+    while (ns) {
+        xmlNewNs(new_root, ns->href, ns->prefix);
+        ns = ns->next;
+    }
     xmlNewChild(new_root, NULL, (const xmlChar *)"title", title);
 
     xmlDocPtr new_doc = xmlCopyDoc(*doc, 0);
