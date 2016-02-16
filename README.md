@@ -114,6 +114,10 @@ converter.vsd2svg(visio_in, out);
 // Convert vss (Stencils) documents
 converter.vss2svg(visio_in, out);
 
+// or with rescaling 
+converter.vsd2svg(visio_in, out, 4.5);
+converter.vss2svg(visio_in, out, 4.5);
+
 // Do something with the output
 for (const auto &rule_pair : out) {
     cout << "Sheet Title: " << rule_pair.first <<std::endl;
