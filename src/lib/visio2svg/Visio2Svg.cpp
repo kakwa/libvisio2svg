@@ -338,13 +338,43 @@ static void convert_iterator(xmlNode *a_node) {
     }
 }
 
-void Visio2Svg::scalesvg(xmlNode *root, double scaling, xmlNode **out) {
+void Visio2Svg::scale_title(xmlNode **root, xmlDocPtr *doc, double scaling, const xmlChar *title) {
     // create a group with transform="scale(<scaling>)" attribute
     xmlNode *node = xmlNewNode(NULL, (const xmlChar *)"g");
     size_t tlen = (size_t)snprintf(NULL, 0, " scale(%f)  ", scaling);
     char *translate = (char *)malloc(tlen);
     tlen = snprintf(translate, tlen, " scale(%f)  ", scaling);
     xmlNewProp(node, (const xmlChar *)"transform", (const xmlChar *)translate);
+
+    xmlNode *new_root = xmlNewNode(NULL, (const xmlChar *)"svg");
+    xmlAttr *attribute = (*root)->properties;
+    double width = 0;
+    double height = 0;
+    while (attribute) {
+        xmlChar *value = xmlNodeListGetString(*doc, attribute->children, 1);
+        if ((!xmlStrcmp(attribute->name, (const xmlChar *)"width")) ||
+            (!xmlStrcmp(attribute->name, (const xmlChar *)"height"))) {
+            double geom = atof((const char *)value);
+            char *cgeom = (char *)malloc(7);
+            snprintf(cgeom, 6, "%4.f", geom * scaling);
+            xmlNewProp(new_root, attribute->name, (const xmlChar *)cgeom);
+            free(cgeom);
+        } else {
+            xmlNewProp(new_root, attribute->name, value);
+        }
+        attribute = attribute->next;
+        xmlFree(value);
+    }
+    xmlNewChild(new_root, NULL, (const xmlChar *)"title", title);
+
+    xmlDocPtr new_doc = xmlCopyDoc(*doc, 0);
+    xmlDocSetRootElement(new_doc, new_root);
+    xmlNode *children = xmlCopyNodeList((*root)->children);
+    xmlAddChildList(new_root, node);
+    xmlAddChildList(node, children);
+    xmlFreeDoc(*doc);
+    *doc = new_doc;
+    *root = new_root;
     free(translate);
 }
 
@@ -360,9 +390,8 @@ void Visio2Svg::postTreatement(const librevenge::RVNGString *in,
     root_element = xmlDocGetRootElement(doc);
     // convert emf blobs
     convert_iterator(root_element);
+    scale_title(&root_element, &doc, scaling, (const xmlChar *)name->cstr());
 
-    // xmlNewChild(root_element, NULL, (const xmlChar *)"title",
-    //            (const xmlChar*)name->cstr());
     xmlBufferPtr nodeBuffer = xmlBufferCreate();
     xmlNodeDump(nodeBuffer, doc, root_element, 0, 1);
     // Dump the generated svg to out
