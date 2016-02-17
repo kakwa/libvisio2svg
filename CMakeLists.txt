@@ -4,13 +4,18 @@ project (vss2svg)
 
 # Project version (sematic versionning)
 set(vss2svg_VERSION_MAJOR 0)
-set(vss2svg_VERSION_MINOR 1)
-set(vss2svg_VERSION_PATCH 0)
+set(vss2svg_VERSION_MINOR 2)
+set(vss2svg_VERSION_PATCH 1)
 
 set(vss2svg_VERSION ${vss2svg_VERSION_MAJOR}.${vss2svg_VERSION_MINOR}.${vss2svg_VERSION_PATCH})
 # set version as a definition
 set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -DV2S_VERSION='\"${vss2svg_VERSION}\"'")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DV2S_VERSION='\"${vss2svg_VERSION}\"'")
+
+add_custom_target(tag
+	COMMAND git tag -a ${vss2svg_VERSION} -m "tagging version ${vss2svg_VERSION}"
+	COMMAND git push origin ${vss2svg_VERSION}
+)
 
 # Options
 option(DEBUG     "compile with debug symbol"    OFF)
