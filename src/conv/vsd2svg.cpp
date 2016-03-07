@@ -1,7 +1,7 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 
-/* vss2svg
- * work based on vss2xhtml from libvisio
+/* vsd2svg
+ * work based on vsd2xhtml from libvisio
  */
 
 // <<<<<<<<<<<<<<<<<<< START ORIGINAL HEADER >>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -33,12 +33,13 @@ const char *argp_program_version = V2S_VERSION;
 
 const char *argp_program_bug_address = "<carpentier.pf@gmail.com>";
 
-static char doc[] = "vsd2svg -- Visio vsd to SVG converter";
+static char doc[] = "vsd2svg -- Visio VSD to SVG converter";
 
 static struct argp_option options[] = {
     {"verbose", 'v', 0, 0, "Produce verbose output"},
     {"input", 'i', "FILE", 0, "Input Visio .vsd file"},
     {"output", 'o', "DIR", 0, "Output directory"},
+    {"scaling", 's', "FLOAT", 0, "Scaling factor"},
     {"version", 'V', 0, 0, "Print vsd2svg version"},
     {0}};
 
@@ -49,6 +50,7 @@ struct arguments {
     char *args[2]; /* arg1 & arg2 */
     bool version, verbose;
     char *output;
+    char *scaling;
     char *input;
 };
 
@@ -66,6 +68,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
         break;
     case 'i':
         arguments->input = arg;
+        break;
+    case 's':
+        arguments->scaling = arg;
         break;
     case 'V':
         arguments->version = 1;
@@ -95,11 +100,20 @@ int main(int argc, char *argv[]) {
     arguments.version = 0;
     arguments.output = NULL;
     arguments.input = NULL;
+    arguments.scaling = NULL;
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
+    double scaling;
+
     if (arguments.version) {
-        std::cout << "vss2svg version: " << V2S_VERSION << "\n";
+        std::cout << "vsd2svg version: " << V2S_VERSION << "\n";
         return 0;
+    }
+
+    if (arguments.scaling == NULL) {
+        scaling = 1.0;
+    } else {
+        scaling = atof(arguments.scaling);
     }
 
     if (arguments.input == NULL) {
@@ -127,7 +141,7 @@ int main(int argc, char *argv[]) {
     visio2svg::Visio2Svg converter;
     std::unordered_map<std::string, std::string> out;
 
-    converter.vsd2svg(in, out);
+    converter.vsd2svg(in, out, scaling);
 
     std::string outputdir(arguments.output);
     mkdir(arguments.output, S_IRWXU);

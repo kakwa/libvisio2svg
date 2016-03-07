@@ -65,7 +65,7 @@ Convert VSS:
 
 ```bash
 # conversion
-$ vss2svg-conv -i ./2960CX.vss -o ./out/
+$ vss2svg-conv -i ./2960CX.vss -o ./out/ -s 4.5
 
 $ ls out/
 'Cisco R42610 Front.svg'      'WS-C2960CX-8PC-L Rear.svg'   'WS-C2960CX-8TC-L Rear.svg'
@@ -79,7 +79,7 @@ Convert VSD:
 
 ```bash
 # conversion
-$ vsd2svg-conv -i ./my.VSD -o ./out/
+$ vsd2svg-conv -i ./my.VSD -o ./out/ -s 7
 
 $ ls out/
 Page-1.svg  Page-2.svg  Page-3.svg  Page-4.svg
@@ -113,6 +113,10 @@ converter.vsd2svg(visio_in, out);
 
 // Convert vss (Stencils) documents
 converter.vss2svg(visio_in, out);
+
+// or with rescaling 
+converter.vsd2svg(visio_in, out, 4.5);
+converter.vss2svg(visio_in, out, 4.5);
 
 // Do something with the output
 for (const auto &rule_pair : out) {
