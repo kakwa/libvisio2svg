@@ -338,7 +338,8 @@ static void convert_iterator(xmlNode *a_node) {
     }
 }
 
-void Visio2Svg::scale_title(xmlNode **root, xmlDocPtr *doc, double scaling, const xmlChar *title) {
+void Visio2Svg::scale_title(xmlNode **root, xmlDocPtr *doc, double scaling,
+                            const xmlChar *title) {
     // create a group with transform="scale(<scaling>)" attribute
     xmlNode *node = xmlNewNode(NULL, (const xmlChar *)"g");
     size_t tlen = (size_t)snprintf(NULL, 0, " scale(%f)  ", scaling);
