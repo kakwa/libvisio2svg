@@ -15,7 +15,6 @@
 namespace visio2svg {
 
 void TextGenerator::startPage(const librevenge::RVNGPropertyList &propList) {
-    titles.append(propList["draw:name"]->getStr().cstr());
 }
 void TextGenerator::startDocument(
     const librevenge::RVNGPropertyList &propList){};
@@ -97,8 +96,8 @@ void TextGenerator::insertText(const librevenge::RVNGString &text){};
 void TextGenerator::insertLineBreak(){};
 void TextGenerator::insertField(const librevenge::RVNGPropertyList &propList){};
 
-TextGenerator::TextGenerator(librevenge::RVNGStringVector &titles)
-    : titles(titles) {
+TextGenerator::TextGenerator(std::list<librevenge::RVNGStringVector> &text)
+    : text(text) {
 }
 
 TextGenerator::~TextGenerator() {

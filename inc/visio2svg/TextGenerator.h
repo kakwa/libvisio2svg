@@ -8,12 +8,13 @@
 #include <librevenge-stream/librevenge-stream.h>
 #include <librevenge-generators/librevenge-generators.h>
 #include <librevenge/RVNGBinaryData.h>
+#include <list>
 
 namespace visio2svg {
 
 class REVENGE_API TextGenerator : public librevenge::RVNGDrawingInterface {
   public:
-    TextGenerator(librevenge::RVNGStringVector &titles);
+    TextGenerator(std::list<librevenge::RVNGStringVector> &text);
     ~TextGenerator();
     void startPage(const librevenge::RVNGPropertyList &propList);
     void startDocument(const librevenge::RVNGPropertyList &propList);
@@ -77,7 +78,7 @@ class REVENGE_API TextGenerator : public librevenge::RVNGDrawingInterface {
     void insertField(const librevenge::RVNGPropertyList &propList);
 
   private:
-    librevenge::RVNGStringVector &titles;
+    std::list<librevenge::RVNGStringVector> text;
 };
 }
 
