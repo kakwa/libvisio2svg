@@ -106,17 +106,23 @@ std::string visio_in;
 visio2svg::Visio2Svg converter;
 std::unordered_map<std::string, std::string> out;
 
+// return code
+int ret = 0;
+
 // Pick one of the following
 
 // Convert vsd documents
-converter.vsd2svg(visio_in, out);
+ret = converter.vsd2svg(visio_in, out);
 
 // Convert vss (Stencils) documents
-converter.vss2svg(visio_in, out);
+ret = converter.vss2svg(visio_in, out);
 
 // or with rescaling 
-converter.vsd2svg(visio_in, out, 4.5);
-converter.vss2svg(visio_in, out, 4.5);
+ret = converter.vsd2svg(visio_in, out, 4.5);
+ret = converter.vss2svg(visio_in, out, 4.5);
+
+if ( ret )
+    cerr << "Conversion errors occured" << "\n";
 
 // Do something with the output
 for (const auto &rule_pair : out) {
