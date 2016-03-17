@@ -78,11 +78,6 @@ add_library(Visio2Svg
     src/lib/visio2svg/Visio2Svg.cpp
 )
 
-add_library(TextGenerator
-    ${SHARED}
-    src/lib/visio2svg/TextGenerator.cpp
-)
-
 set_target_properties(Visio2Svg
     PROPERTIES
     VERSION ${vss2svg_VERSION}
@@ -95,19 +90,7 @@ set_target_properties(TitleGenerator
     SOVERSION ${vss2svg_VERSION_MAJOR}
 )
 
-set_target_properties(TextGenerator
-    PROPERTIES
-    VERSION ${vss2svg_VERSION}
-    SOVERSION ${vss2svg_VERSION_MAJOR}
-)
-
 target_link_libraries(TitleGenerator
-    revenge-0.0
-    visio-0.1
-    revenge-stream-0.0
-)
-
-target_link_libraries(TextGenerator
     revenge-0.0
     visio-0.1
     revenge-stream-0.0
@@ -119,7 +102,6 @@ target_link_libraries(Visio2Svg
     revenge-stream-0.0
     emf2svg
     TitleGenerator
-    TextGenerator
 )
 
 target_link_libraries(vss2svg-conv
@@ -131,7 +113,7 @@ target_link_libraries(vsd2svg-conv
 )
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-INSTALL(TARGETS vss2svg-conv vsd2svg-conv TitleGenerator TextGenerator Visio2Svg
+INSTALL(TARGETS vss2svg-conv vsd2svg-conv TitleGenerator Visio2Svg
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
