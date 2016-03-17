@@ -36,27 +36,23 @@ Visio2Svg::~Visio2Svg() {
 int Visio2Svg::vss2svg(std::string &in,
                        std::unordered_map<std::string, std::string> &out,
                        double scaling) {
-    visio2svg(in, out, scaling, VISIOVSS);
-    return 0;
+    return visio2svg(in, out, scaling, VISIOVSS);
 }
 
 int Visio2Svg::vss2svg(std::string &in,
                        std::unordered_map<std::string, std::string> &out) {
-    visio2svg(in, out, 1.0, VISIOVSS);
-    return 0;
+    return visio2svg(in, out, 1.0, VISIOVSS);
 }
 
 int Visio2Svg::vsd2svg(std::string &in,
                        std::unordered_map<std::string, std::string> &out) {
-    visio2svg(in, out, 1.0, VISIOVSD);
-    return 0;
+    return visio2svg(in, out, 1.0, VISIOVSD);
 }
 
 int Visio2Svg::vsd2svg(std::string &in,
                        std::unordered_map<std::string, std::string> &out,
                        double scaling) {
-    visio2svg(in, out, scaling, VISIOVSD);
-    return 0;
+    return visio2svg(in, out, scaling, VISIOVSD);
 }
 
 int Visio2Svg::visio2svg(std::string &in,
@@ -72,7 +68,7 @@ int Visio2Svg::visio2svg(std::string &in,
         return 1;
     }
 
-    int ret;
+    int ret = 0;
 
     // Recover Titles of each sheets
     librevenge::RVNGStringVector output_names;
@@ -101,20 +97,22 @@ int Visio2Svg::visio2svg(std::string &in,
         std::cerr << "ERROR: SVG Generation failed!" << std::endl;
         return 1;
     }
+    ret = 0;
 
     // Post Treatment loop and construction of the output hash table
     for (unsigned k = 0; k < output.size(); ++k) {
         char *post_treated;
         // Convert <image> tag containing emf blobs
-        // and resize image (not implemented yet
-        postTreatement(&output[k], &output_names[k], &post_treated, scaling);
+        // and resize image
+        ret |= postTreatement(&output[k], &output_names[k], &post_treated,
+                              scaling);
         std::pair<std::string, std::string> item(output_names[k].cstr(),
                                                  std::string(post_treated));
         // output[k].cstr());
         free(post_treated);
         out.insert(item);
     }
-    return 0;
+    return ret;
 }
 
 // base64 decoder
@@ -187,9 +185,10 @@ int base64decode(char *in, size_t inLen, unsigned char *out, size_t *outLen) {
 // If it encounters an <image> node, it checks if it's an emf blob
 // and replace it with the result of emf2svg put inside a <g> node
 // with proper translate() to get proper position.
-static void convert_iterator(xmlNode *a_node) {
+int convert_iterator(xmlNode *a_node) {
     xmlNode *cur_node = NULL;
     xmlNode *next_node;
+    int ret = 0;
 
     for (cur_node = a_node; cur_node;) {
         next_node = cur_node->next;
@@ -291,18 +290,21 @@ static void convert_iterator(xmlNode *a_node) {
                 size_t emf_size = len; //(len * 3 / 4 + 4);
                 unsigned char *emf_content =
                     (unsigned char *)calloc(emf_size, 1);
-                int ret = 0;
-                ret = base64decode((char *)(imgb64 + 22), (len - 22),
-                                   emf_content, &emf_size);
+                int b64e = base64decode((char *)(imgb64 + 22), (len - 22),
+                                        emf_content, &emf_size);
+                ret |= b64e;
                 xmlFree(imgb64);
                 imgb64 = NULL;
-                if (ret)
+                if (b64e)
                     std::cerr << "ERROR: Base64 decode failed" << std::endl;
 
                 // convert emf
-                ret = emf2svg((char *)emf_content, emf_size, &svg_out, options);
-                if (!ret)
+                int e2se =
+                    emf2svg((char *)emf_content, emf_size, &svg_out, options);
+                if (!e2se) {
                     std::cerr << "ERROR: Failed to convert emf" << std::endl;
+                    ret = 1;
+                }
                 xmlDocPtr doc;
                 xmlNode *root_element = NULL;
 
@@ -328,18 +330,20 @@ static void convert_iterator(xmlNode *a_node) {
                 free(translate);
                 xmlFreeDoc(doc);
             } else {
-                convert_iterator(cur_node->children);
+                ret |= convert_iterator(cur_node->children);
             }
             free(imgb64);
         } else {
-            convert_iterator(cur_node->children);
+            ret |= convert_iterator(cur_node->children);
         }
         cur_node = next_node;
     }
+    return ret;
 }
 
-void Visio2Svg::scale_title(xmlNode **root, xmlDocPtr *doc, double scaling,
-                            const xmlChar *title) {
+int Visio2Svg::scale_title(xmlNode **root, xmlDocPtr *doc, double scaling,
+                           const xmlChar *title) {
+    int ret = 0;
     // create a group with transform="scale(<scaling>)" attribute
     xmlNode *node = xmlNewNode(NULL, (const xmlChar *)"g");
     size_t tlen = (size_t)snprintf(NULL, 0, " scale(%f)  ", scaling);
@@ -383,20 +387,22 @@ void Visio2Svg::scale_title(xmlNode **root, xmlDocPtr *doc, double scaling,
     *doc = new_doc;
     *root = new_root;
     free(translate);
+    return ret;
 }
 
-void Visio2Svg::postTreatement(const librevenge::RVNGString *in,
-                               const librevenge::RVNGString *name, char **out,
-                               double scaling) {
+int Visio2Svg::postTreatement(const librevenge::RVNGString *in,
+                              const librevenge::RVNGString *name, char **out,
+                              double scaling) {
     xmlDocPtr doc;
     xmlNode *root_element = NULL;
+    int ret = 0;
     // parse svg/xml generated by librevenge/libvisio with libxml2
     doc =
         xmlReadMemory(in->cstr(), in->size(), name->cstr(), NULL,
                       XML_PARSE_RECOVER | XML_PARSE_NOBLANKS | XML_PARSE_NONET);
     root_element = xmlDocGetRootElement(doc);
     // convert emf blobs
-    convert_iterator(root_element);
+    ret |= convert_iterator(root_element);
     scale_title(&root_element, &doc, scaling, (const xmlChar *)name->cstr());
 
     xmlBufferPtr nodeBuffer = xmlBufferCreate();
@@ -408,6 +414,7 @@ void Visio2Svg::postTreatement(const librevenge::RVNGString *in,
     nodeBuffer->content = NULL;
     xmlBufferFree(nodeBuffer);
     xmlCleanupParser();
+    return ret;
 }
 }
 

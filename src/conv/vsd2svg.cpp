@@ -135,13 +135,14 @@ int main(int argc, char *argv[]) {
                   << "'\n";
         return 1;
     }
+    int ret = 0;
     std::string in((std::istreambuf_iterator<char>(stin)),
                    std::istreambuf_iterator<char>());
 
     visio2svg::Visio2Svg converter;
     std::unordered_map<std::string, std::string> out;
 
-    converter.vsd2svg(in, out, scaling);
+    ret = converter.vsd2svg(in, out, scaling);
 
     std::string outputdir(arguments.output);
     mkdir(arguments.output, S_IRWXU);
@@ -153,8 +154,13 @@ int main(int argc, char *argv[]) {
         myfile.open(newfilename);
         myfile << rule_pair.second << std::endl;
         myfile.close();
+        if (!myfile) {
+            std::cerr << "[ERROR] "
+                      << "Failed to write file '" << rule_pair.first << "'\n";
+            ret = 1;
+        }
     }
 
-    return 0;
+    return ret;
 }
 /* vim:set shiftwidth=2 softtabstop=2 expandtab: */

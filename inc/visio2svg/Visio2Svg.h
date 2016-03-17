@@ -26,11 +26,11 @@ class Visio2Svg {
                 double scaling);
 
   private:
-    void postTreatement(const librevenge::RVNGString *in,
-                        const librevenge::RVNGString *name, char **out,
-                        double scaling);
-    void scale_title(xmlNode **root, xmlDocPtr *doc, double scaling,
-                     const xmlChar *title);
+    int postTreatement(const librevenge::RVNGString *in,
+                       const librevenge::RVNGString *name, char **out,
+                       double scaling);
+    int scale_title(xmlNode **root, xmlDocPtr *doc, double scaling,
+                    const xmlChar *title);
     int visio2svg(std::string &in,
                   std::unordered_map<std::string, std::string> &out,
                   double scaling, int mode);
