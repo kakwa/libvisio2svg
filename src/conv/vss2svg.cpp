@@ -36,7 +36,6 @@ const char *argp_program_bug_address = "<carpentier.pf@gmail.com>";
 static char doc[] = "vss2svg -- Visio stencil to SVG converter";
 
 static struct argp_option options[] = {
-    {"verbose", 'v', 0, 0, "Produce verbose output"},
     {"input", 'i', "FILE", 0, "Input Visio .vss file"},
     {"output", 'o', "DIR", 0, "Output directory"},
     {"scaling", 's', "FLOAT", 0, "Scaling factor"},
@@ -48,7 +47,7 @@ static char args_doc[] = "[options] -i <in vss> -o <out dir>";
 
 struct arguments {
     char *args[2]; /* arg1 & arg2 */
-    bool version, verbose;
+    bool version;
     char *output;
     char *scaling;
     char *input;
@@ -60,9 +59,6 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     struct arguments *arguments = (struct arguments *)state->input;
 
     switch (key) {
-    case 'v':
-        arguments->verbose = 1;
-        break;
     case 'o':
         arguments->output = arg;
         break;
