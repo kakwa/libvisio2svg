@@ -1,5 +1,6 @@
 sudo: required
 dist: trusty
+language: cpp
 
 install:
   - 'sudo apt-get update -qq'
@@ -8,7 +9,7 @@ install:
 addons_shortcuts:
   addons_clang: &clang
     apt:
-            sources: [ 'ubuntu-toolchain-r-test', 'ppa:kubuntu-ppa/backports' ]
+      sources: [ 'ubuntu-toolchain-r-test', 'ppa:kubuntu-ppa/backports' ]
       packages:
         - librevenge-dev
         - libvisio-dev
@@ -25,7 +26,7 @@ addons_shortcuts:
         - zlib1g-dev
   addons_gcc5: &gcc5
     apt:
-            sources: [ 'ubuntu-toolchain-r-test', 'ppa:kubuntu-ppa/backports' ]
+      sources: [ 'ubuntu-toolchain-r-test', 'ppa:kubuntu-ppa/backports' ]
       packages: 
         - librevenge-dev
         - libvisio-dev
@@ -44,7 +45,7 @@ addons_shortcuts:
 
   addons_gcc6: &gcc6
     apt:
-            sources: [ 'ubuntu-toolchain-r-test', 'ppa:kubuntu-ppa/backports' ]
+      sources: [ 'ubuntu-toolchain-r-test', 'ppa:kubuntu-ppa/backports' ]
       packages: 
         - librevenge-dev
         - libvisio-dev
