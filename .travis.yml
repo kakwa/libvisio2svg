@@ -3,14 +3,14 @@ dist: trusty
 
 install:
   - 'sudo apt-get update -qq'
-  - 'DEBIAN_FRONTEND=noninteractive apt-get install librevenge-dev libvisio-dev libxml2-dev lsb-base libattr1 -t jessie -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"  -f -q -y'
+  - 'sudo DEBIAN_FRONTEND=noninteractive apt-get install librevenge-dev libvisio-dev libxml2-dev lsb-base libattr1 -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"  -f -q -y || true'
 
 addons_shortcuts:
-  addons_clang38: &clang38
+  addons_clang38: &clang39
     apt:
       sources: [ 'ubuntu-toolchain-r-test', 'llvm-toolchain-trusty' ]
       packages:
-        - clang-3.8
+        - clang-3.9
         - libboost-dev
         - libxml2-dev
         - valgrind
@@ -41,9 +41,9 @@ addons_shortcuts:
 matrix:
   include:
     - os: linux
-      compiler: "clang-3.8"
-      env: CXX=clang++-3.8 CC=clang-3.8
-      addons: *clang38
+      compiler: "clang-3.9"
+      env: CXX=clang++-3.9 CC=clang-3.9
+      addons: *clang39
     - os: linux
       compiler: "gcc-5"
       env: CXX=g++-5 CC=gcc-5
