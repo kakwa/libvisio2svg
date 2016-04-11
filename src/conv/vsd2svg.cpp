@@ -20,6 +20,7 @@
 #include <string.h>
 #include <fstream>
 #include <string>
+#include <regex>
 #include <stdlib.h>
 #include <argp.h>
 #include <sys/types.h>
@@ -142,11 +143,12 @@ int main(int argc, char *argv[]) {
 
     std::string outputdir(arguments.output);
     mkdir(arguments.output, S_IRWXU);
+    std::regex e ("[^A-Za-z0-9-]");
 
     for (const auto &rule_pair : out) {
         ofstream myfile;
         std::basic_string<char> newfilename =
-            outputdir + "/" + rule_pair.first + ".svg";
+            outputdir + "/" + std::regex_replace(rule_pair.first, e, "_") + ".svg";
         myfile.open(newfilename);
         myfile << rule_pair.second << std::endl;
         myfile.close();
