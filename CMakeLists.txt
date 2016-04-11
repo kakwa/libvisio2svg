@@ -4,7 +4,7 @@ project (vss2svg)
 
 # Project version (sematic versionning)
 set(vss2svg_VERSION_MAJOR 0)
-set(vss2svg_VERSION_MINOR 3)
+set(vss2svg_VERSION_MINOR 4)
 set(vss2svg_VERSION_PATCH 0)
 
 set(vss2svg_VERSION ${vss2svg_VERSION_MAJOR}.${vss2svg_VERSION_MINOR}.${vss2svg_VERSION_PATCH})
