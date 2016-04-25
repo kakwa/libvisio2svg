@@ -20,13 +20,13 @@
 #include <string.h>
 #include <fstream>
 #include <string>
+#include <regex>
 #include <stdlib.h>
 #include <argp.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "visio2svg/Visio2Svg.h"
 #include <unordered_map>
-#include <regex>
 
 using namespace std;
 
