@@ -22,12 +22,20 @@ option(DEBUG     "compile with debug symbol"    OFF)
 option(STATIC    "compile statically"           OFF)
 option(USE_CLANG "build application with clang" OFF)
 option(USE_GCC   "build application with gcc"   OFF)
+option(DEPS_PATH   "enable linking in ./tests/usr/local"   OFF)
 option(FORCELE   "force little endian architecture"   OFF)
 
 if(USE_CLANG)
     set(CMAKE_CXX_COMPILER "clang++")
     set(CMAKE_CC_COMPILER  "clang"  )
 endif(USE_CLANG)
+
+if(DEPS_PATH)
+    set(DEPS_INC "./tests/usr/local/include/librevenge-0.0/
+    tests/usr/local/include/libvisio-0.1/")
+    set(DEPS_LINK  "./tests/usr/local/lib"  )
+endif(DEPS_PATH)
+
 
 if(USE_GCC)
     set(CMAKE_CXX_COMPILER "g++")
@@ -52,10 +60,11 @@ endif(STATIC)
 LINK_DIRECTORIES(
     /usr/local/lib
     /usr/lib/
+    ${DEPS_LINK}
 )
 
 include_directories(
-    ./inc/
+    inc/
     /usr/local/include/
     /usr/include/
     /usr/include/librevenge-0.0/
@@ -63,6 +72,7 @@ include_directories(
     /usr/local/include/librevenge-0.0/
     /usr/include/libvisio-0.1/
     /usr/local/include/libvisio-0.1/
+    ${DEPS_INC}
 )
 
 add_executable(vss2svg-conv src/conv/vss2svg.cpp)
