@@ -31,9 +31,10 @@ if(USE_CLANG)
 endif(USE_CLANG)
 
 if(DEPS_PATH)
-    set(DEPS_INC "./tests/usr/local/include/librevenge-0.0/
-    tests/usr/local/include/libvisio-0.1/")
-    set(DEPS_LINK  "./tests/usr/local/lib"  )
+    set(DEPS_INC_RVNG "${CMAKE_SOURCE_DIR}/tests/usr/local/include/librevenge-0.0/")
+    set(DEPS_INC "${CMAKE_SOURCE_DIR}/tests/usr/local/include/")
+    set(DEPS_INC_VISIO "${CMAKE_SOURCE_DIR}/tests/usr/local/include/libvisio-0.1/")
+    set(DEPS_LINK  "${CMAKE_SOURCE_DIR}/tests/usr/local/lib"  )
 endif(DEPS_PATH)
 
 
@@ -72,6 +73,8 @@ include_directories(
     /usr/local/include/librevenge-0.0/
     /usr/include/libvisio-0.1/
     /usr/local/include/libvisio-0.1/
+    ${DEPS_INC_RVNG}
+    ${DEPS_INC_VISIO}
     ${DEPS_INC}
 )
 
