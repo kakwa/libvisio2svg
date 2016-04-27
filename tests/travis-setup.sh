@@ -35,6 +35,7 @@ while getopts ":hn:" opt; do
 done
 
 OUT=`dirname $0`
+OUT=`readlink -f $OUT`
 
 RVNG_VERSION=0.0.4
 VISIO_VERSION=0.1.5
