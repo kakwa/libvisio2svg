@@ -49,11 +49,11 @@ cd libemf2svg-${EMF_VERSION} && cmake . && make && make install DESTDIR=$OUT && 
 ! [ -e "librevenge-${RVNG_VERSION}.tar.xz" ] && wget http://netix.dl.sourceforge.net/project/libwpd/librevenge/librevenge-${RVNG_VERSION}/librevenge-${RVNG_VERSION}.tar.xz
 rm -rf librevenge-${RVNG_VERSION}
 tar -xf librevenge-${RVNG_VERSION}.tar.xz || exit 1
-cd librevenge-${RVNG_VERSION} && ./configure --disable-tests && make && make install DESTDIR=$OUT && cd - || exit 1
+cd librevenge-${RVNG_VERSION} && ./configure --disable-tests --without-docs && make && make install DESTDIR=$OUT && cd - || exit 1
 find $OUT -name "*.pc" -exec sed -i "s|^prefix=|prefix=$OUT|" {} \;
 
 export PKG_CONFIG_PATH="$OUT/usr/local/lib/pkgconfig"
 ! [ -e "libvisio-${VISIO_VERSION}.tar.xz" ] && wget http://dev-www.libreoffice.org/src/libvisio/libvisio-${VISIO_VERSION}.tar.xz
 rm -rf libvisio-${VISIO_VERSION}
 tar -xf libvisio-${VISIO_VERSION}.tar.xz || exit 1
-cd libvisio-${VISIO_VERSION} && ./configure --disable-tests --disable-tools && make && make install DESTDIR=$OUT && cd - || exit 1
+cd libvisio-${VISIO_VERSION} && ./configure --disable-tests --disable-tools --without-docs && make && make install DESTDIR=$OUT && cd - || exit 1
