@@ -79,4 +79,4 @@ matrix:
       env: CXX=g++-6 CC=gcc-6
       addons: *gcc6
 
-script: cmake . -DDEPS_PATH=ON && make #&& ./tests/resources/check_correctness.sh
+script: cmake . -DDEPS_PATH=ON -DUSE_CLANG=ON && make #&& ./tests/resources/check_correctness.sh
