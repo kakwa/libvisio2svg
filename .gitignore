@@ -34,3 +34,5 @@ vsd2svg-conv
 
 # out directory
 out
+tests/deps_build/
+tests/usr/
