@@ -36,6 +36,8 @@ done
 
 OUT=`dirname $0`
 OUT=`readlink -f $OUT`
+mkdir -p ${OUT}/deps_build
+cd ${OUT}/deps_build
 
 RVNG_VERSION=0.0.4
 VISIO_VERSION=0.1.5
