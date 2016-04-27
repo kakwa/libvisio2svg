@@ -1,6 +1,9 @@
 Libvisio2svg
 ============
 
+[![Build Status](https://travis-ci.org/kakwa/libvisio2svg.svg?branch=master)](https://travis-ci.org/kakwa/libvisio2svg)
+
+
 Library/Utilities to convert Microsoft (MS) Visio Documents and Stencils (VSS and VSD) to SVG.
 
 Motivation
