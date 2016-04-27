@@ -6,24 +6,6 @@ install:
   - ./tests/travis-setup.sh 
 
 addons_shortcuts:
-  addons_clang: &clang
-    apt:
-      sources: [ 'ubuntu-toolchain-r-test', 'ppa:kubuntu-ppa/backports' ]
-      packages:
-        - librevenge-dev
-        - libvisio-dev
-        - clang
-        - libboost-dev
-        - libxml2-dev
-        - valgrind
-        - cmake
-        - libcppunit-dev
-        - autotools-dev
-        - doxygen
-        - gperf
-        - libicu-dev
-        - zlib1g-dev
-        - libpng-dev
   addons_gcc5: &gcc5
     apt:
       sources: [ 'ubuntu-toolchain-r-test', 'ppa:kubuntu-ppa/backports' ]
@@ -44,39 +26,11 @@ addons_shortcuts:
         - zlib1g-dev
         - libpng-dev
 
-  addons_gcc6: &gcc6
-    apt:
-      sources: [ 'ubuntu-toolchain-r-test', 'ppa:kubuntu-ppa/backports' ]
-      packages: 
-        - librevenge-dev
-        - libvisio-dev
-        - g++-6 
-        - gcc-6
-        - libboost-dev
-        - libxml2-dev
-        - valgrind
-        - cmake
-        - libcppunit-dev
-        - autotools-dev
-        - doxygen
-        - gperf
-        - libicu-dev
-        - zlib1g-dev
-        - libpng-dev
-
 matrix:
   include:
-    - os: linux
-      compiler: "clang"
-      env: CXX=clang++ CC=clang
-      addons: *clang
     - os: linux
       compiler: "gcc-5"
       env: CXX=g++-5 CC=gcc-5
       addons: *gcc5
-    - os: linux
-      compiler: "gcc-6"
-      env: CXX=g++-6 CC=gcc-6
-      addons: *gcc6
 
 script: cmake . -DDEPS_PATH=ON -DUSE_CLANG=ON && make #&& ./tests/resources/check_correctness.sh
