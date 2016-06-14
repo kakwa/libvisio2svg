@@ -24,6 +24,13 @@ option(USE_CLANG "build application with clang" OFF)
 option(USE_GCC   "build application with gcc"   OFF)
 option(DEPS_PATH   "enable linking in ./tests/usr/local"   OFF)
 option(FORCELE   "force little endian architecture"   OFF)
+option(UNSAFE_FILENAME     "disable safe file naming (if your stdlib doesn't support regex)"    OFF)
+
+if(UNSAFE_FILENAME)
+else(UNSAFE_FILENAME)
+    set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -DSAFE_FILENAME")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSAFE_FILENAME")
+endif(UNSAFE_FILENAME)
 
 if(USE_CLANG)
     set(CMAKE_CXX_COMPILER "clang++")

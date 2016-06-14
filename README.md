@@ -12,7 +12,6 @@ Motivation
 There are tons of publicly available MS Visio stencils, for example 
 [the Cisco ones](http://www.cisco.com/c/en/us/products/visio-stencil-listing.html) 
 or the stencils from [VisioCafe](http://www.visiocafe.com/).
-
 This library and utilities were created to be able to convert these stencils to SVG
 and reuse them outside of Microsoft Visio, in programs like 
 [yEd](https://www.yworks.com/products/yed), [Inkscape](https://inkscape.org), 
@@ -57,6 +56,23 @@ $ make
 # installation
 $ make install
 ```
+
+Regex
+-----
+
+The vss2svg and vsd2svg utilities rely on regular expressions to construct safe file names from stencils/sheets names.
+It will replace anything that is not matching **[A-Za-z0-9-]** by an underscore.
+
+This functionnality relies on regexp from libstdc++ (c++11 standard), but older libraries doesn't support regex.
+
+Yet you can compile without this file name sanitization:
+
+```
+$ cmake . -DUNSAFE_FILENAME=ON
+$ make
+```
+
+However, be cautious with the stencil/sheet names, otherwise some files might be written outside the output directory.
 
 Usage
 =====
