@@ -63,7 +63,7 @@ Regex
 The vss2svg and vsd2svg utilities rely on regular expressions to construct safe file names from stencils/sheets names.
 It will replace anything that is not matching **[A-Za-z0-9-]** by an underscore.
 
-This functionnality relies on regexp from libstdc++ (c++11 standard), but older libraries doesn't support regex.
+This functionality relies on regexp from libstdc++ (c++11 standard), but older libraries doesn't support regex.
 
 Yet you can compile without this file name sanitization:
 
