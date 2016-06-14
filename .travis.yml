@@ -10,7 +10,6 @@ addons_shortcuts:
     apt:
       sources: [ 'ubuntu-toolchain-r-test', 'ppa:kubuntu-ppa/backports' ]
       packages: 
-        - librevenge-dev
         - libvisio-dev
         - g++-5 
         - gcc-5
