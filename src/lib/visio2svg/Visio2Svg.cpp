@@ -266,7 +266,7 @@ int convert_iterator(xmlNode *a_node) {
                     }
                     attribute = attribute->next;
                 }
-                // if there was no "transform" attrirbute, add it with our
+                // if there was no "transform" attribute, add it with our
                 // translate
                 if (!(translate_set)) {
                     xmlNewProp(node, (const xmlChar *)"transform",
