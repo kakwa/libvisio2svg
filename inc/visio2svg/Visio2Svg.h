@@ -10,6 +10,12 @@
 
 namespace visio2svg {
 
+enum IMG_TYPE {
+    UNKNOWN_IMGTYPE,
+    EMF_IMGTYPE,
+    WMF_IMGTYPE,
+};
+
 class Visio2Svg {
   public:
     Visio2Svg();
