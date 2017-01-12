@@ -364,7 +364,7 @@ int base64decode(char *in, size_t inLen, unsigned char *out, size_t *outLen) {
 // If it encounters an <image> node, it checks if it's an emf blob
 // and replace it with the result of emf2svg put inside a <g> node
 // with proper translate() to get proper position.
-int convert_iterator(xmlNode *a_node) {
+int convert_iterator(xmlNode *a_node, xmlDocPtr root_doc) {
     xmlNode *cur_node = NULL;
     xmlNode *next_node;
     int ret = 0;
@@ -481,6 +481,8 @@ int convert_iterator(xmlNode *a_node) {
                 xmlFree(imgb64);
                 imgb64 = NULL;
                 int e2se;
+                xmlNodePtr s_sta;
+                xmlNodePtr s_end;
                 if (b64e) {
 #ifdef DEBUG
                     std::cerr << "ERROR: Base64 decode failed" << std::endl;
@@ -512,11 +514,15 @@ int convert_iterator(xmlNode *a_node) {
                         ret = 1;
                     }
                     free(options);
+                    s_sta = xmlNewDocComment(root_doc, (const unsigned char*)"emf-blob start");
+                    s_end = xmlNewDocComment(root_doc, (const unsigned char*)"emf-blob end");
                     break;
                 }
                 case WMF_IMGTYPE: {
                     e2se = wmf2svg_draw((char *)content, size, width, height,
                                         &svg_out, &len_out);
+                    s_sta = xmlNewDocComment(root_doc, (const unsigned char*)"wmf-blob start");
+                    s_end = xmlNewDocComment(root_doc, (const unsigned char*)"wmf-blob end");
                     if (e2se) {
 #ifdef DEBUG
                         std::cerr << "ERROR: Failed to convert wmf blob"
@@ -544,10 +550,13 @@ int convert_iterator(xmlNode *a_node) {
                                         XML_PARSE_NONET | XML_PARSE_NOERROR);
                 root_element = xmlDocGetRootElement(doc);
 
+                xmlAddChild(node, s_sta);
+
                 // insert new nodes
                 xmlNode *blob_svg = xmlCopyNodeList(root_element);
                 xmlAddChildList(node, blob_svg);
                 xmlAddChildList(cur_node->parent, node);
+                xmlAddChild(node, s_end);
 
                 // remove image node
                 xmlUnlinkNode(cur_node);
@@ -559,11 +568,11 @@ int convert_iterator(xmlNode *a_node) {
                 free(translate);
                 xmlFreeDoc(doc);
             } else {
-                ret |= convert_iterator(cur_node->children);
+                ret |= convert_iterator(cur_node->children, root_doc);
             }
             free(imgb64);
         } else {
-            ret |= convert_iterator(cur_node->children);
+            ret |= convert_iterator(cur_node->children, root_doc);
         }
         cur_node = next_node;
     }
@@ -630,8 +639,10 @@ int Visio2Svg::postTreatement(const librevenge::RVNGString *in,
         xmlReadMemory(in->cstr(), in->size(), name->cstr(), NULL,
                       XML_PARSE_RECOVER | XML_PARSE_NOBLANKS | XML_PARSE_NONET);
     root_element = xmlDocGetRootElement(doc);
-    // convert emf blobs
-    ret |= convert_iterator(root_element);
+    xmlNodePtr comment = xmlNewDocComment(doc, (const unsigned char*)"converted by libvisio2svg");
+    xmlAddChild(root_element, comment);
+    // convert blobs (wmf, emf, ...)
+    ret |= convert_iterator(root_element, doc);
     scale_title(&root_element, &doc, scaling, (const xmlChar *)name->cstr());
 
     xmlBufferPtr nodeBuffer = xmlBufferCreate();
