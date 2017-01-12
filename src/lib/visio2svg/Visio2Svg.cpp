@@ -65,43 +65,69 @@ int Visio2Svg::vsd2svg(std::string &in,
     return visio2svg(in, out, scaling, VISIOVSD);
 }
 
-int explicit_wmf_error(wmf_error_t err) {
+int explicit_wmf_error(char const *str, wmf_error_t err) {
     int status = 0;
 
     switch (err) {
     case wmf_E_None:
+#ifdef DEBUG
+        fprintf(stderr, "%s returned with wmf_E_None.\n", str);
+#endif
         status = 0;
         break;
 
     case wmf_E_InsMem:
+#ifdef DEBUG
+        fprintf(stderr, "%s returned with wmf_E_InsMem.\n", str);
+#endif
         status = 1;
         break;
 
     case wmf_E_BadFile:
+#ifdef DEBUG
+        fprintf(stderr, "%s returned with wmf_E_BadFile.\n", str);
+#endif
         status = 1;
         break;
 
     case wmf_E_BadFormat:
+#ifdef DEBUG
+        fprintf(stderr, "%s returned with wmf_E_BadFormat.\n", str);
+#endif
         status = 1;
         break;
 
     case wmf_E_EOF:
+#ifdef DEBUG
+        fprintf(stderr, "%s returned with wmf_E_EOF.\n", str);
+#endif
         status = 1;
         break;
 
     case wmf_E_DeviceError:
+#ifdef DEBUG
+        fprintf(stderr, "%s returned with wmf_E_DeviceError.\n", str);
+#endif
         status = 1;
         break;
 
     case wmf_E_Glitch:
+#ifdef DEBUG
+        fprintf(stderr, "%s returned with wmf_E_Glitch.\n", str);
+#endif
         status = 1;
-        break;
 
     case wmf_E_Assert:
+#ifdef DEBUG
+        fprintf(stderr, "%s returned with wmf_E_Assert.\n", str);
+#endif
         status = 1;
         break;
 
     default:
+#ifdef DEBUG
+        fprintf(stderr, "%s returned unexpected value.\n", str);
+#endif
         status = 1;
         break;
     }
@@ -132,13 +158,12 @@ int wmf2svg_draw(char *content, size_t size, float wmf_width, float wmf_height,
     flags = 0;
 
     flags |= WMF_OPT_FUNCTION;
-    // flags |= WMF_OPT_ARGS;
     flags |= WMF_OPT_IGNORE_NONFATAL;
 
     api_options.function = wmf_svg_function;
 
     err = wmf_api_create(&API, flags, &api_options);
-    status = explicit_wmf_error(err);
+    status = explicit_wmf_error("wmf_api", err);
 
     if (status) {
         if (API)
@@ -147,7 +172,7 @@ int wmf2svg_draw(char *content, size_t size, float wmf_width, float wmf_height,
     }
 
     err = wmf_mem_open(API, (unsigned char *)content, (long)size);
-    status = explicit_wmf_error(err);
+    status = explicit_wmf_error("open", err);
 
     if (status) {
         wmf_api_destroy(API);
@@ -155,7 +180,7 @@ int wmf2svg_draw(char *content, size_t size, float wmf_width, float wmf_height,
     }
 
     err = wmf_scan(API, 0, &bbox);
-    status = explicit_wmf_error(err);
+    status = explicit_wmf_error("scan", err);
 
     if (status) {
         wmf_api_destroy(API);
@@ -169,7 +194,9 @@ int wmf2svg_draw(char *content, size_t size, float wmf_width, float wmf_height,
     wmf_size(API, &width, &height);
 
     if ((width <= 0) || (height <= 0)) {
-        fputs("Bad image size - but this error shouldn't occur...\n", stderr);
+#ifdef DEBUG
+        fprintf(stderr, "Bad image size - but this error shouldn't occur...\n");
+#endif
         status = 1;
         wmf_api_destroy(API);
         return (status);
@@ -188,12 +215,15 @@ int wmf2svg_draw(char *content, size_t size, float wmf_width, float wmf_height,
     wmfD_Rect d_r;
     if (status == 0) {
         err = wmf_play(API, 0, &d_r);
-        status = explicit_wmf_error(err);
+        status = explicit_wmf_error("play", err);
     }
 
     fclose(out_f);
     wmf_api_destroy(API);
 
+#ifdef DEBUG
+    printf("%d, %d\n", err, status);
+#endif
     return (status);
 }
 
@@ -205,9 +235,11 @@ int Visio2Svg::visio2svg(std::string &in,
 
     // check document type
     if (!libvisio::VisioDocument::isSupported(&input)) {
+#ifdef DEBUG
         std::cerr << "ERROR: Unsupported file format (unsupported version) or "
                      "file is encrypted!"
                   << std::endl;
+#endif
         return 1;
     }
 
@@ -223,8 +255,10 @@ int Visio2Svg::visio2svg(std::string &in,
     }
 
     if (!ret || output_names.empty()) {
+#ifdef DEBUG
         std::cerr << "ERROR: Failed to recover sheets titles failed!"
                   << std::endl;
+#endif
         return 1;
     }
 
@@ -237,7 +271,9 @@ int Visio2Svg::visio2svg(std::string &in,
         ret = libvisio::VisioDocument::parse(&input, &generator);
     }
     if (!ret || output.empty()) {
+#ifdef DEBUG
         std::cerr << "ERROR: SVG Generation failed!" << std::endl;
+#endif
         return 1;
     }
     ret = 0;
@@ -445,8 +481,12 @@ int convert_iterator(xmlNode *a_node) {
                 xmlFree(imgb64);
                 imgb64 = NULL;
                 int e2se;
-                if (b64e)
+                if (b64e) {
+#ifdef DEBUG
                     std::cerr << "ERROR: Base64 decode failed" << std::endl;
+#endif
+                    ret = 1;
+                }
 
                 switch (image_type) {
                 case EMF_IMGTYPE: {
@@ -462,28 +502,34 @@ int convert_iterator(xmlNode *a_node) {
                     options->imgHeight = height;
 
                     // convert emf
-                    e2se = emf2svg((char *)content, size, &svg_out,
-                                       &len_out, options);
+                    e2se = emf2svg((char *)content, size, &svg_out, &len_out,
+                                   options);
                     if (!e2se) {
+#ifdef DEBUG
                         std::cerr << "ERROR: Failed to convert emf blob"
                                   << std::endl;
+#endif
                         ret = 1;
                     }
                     free(options);
                     break;
                 }
                 case WMF_IMGTYPE: {
-                    e2se = wmf2svg_draw((char *)content, size, width,
-                                            height, &svg_out, &len_out);
-                    if (!e2se) {
+                    e2se = wmf2svg_draw((char *)content, size, width, height,
+                                        &svg_out, &len_out);
+                    if (e2se) {
+#ifdef DEBUG
                         std::cerr << "ERROR: Failed to convert wmf blob"
                                   << std::endl;
+#endif
                         ret = 1;
                     }
                     break;
                 }
                 default: {
+#ifdef DEBUG
                     std::cerr << "ERROR: Unknown image type" << std::endl;
+#endif
                     ret = 1;
                     break;
                 }
