@@ -461,14 +461,18 @@ int convert_iterator(xmlNode *a_node) {
                         int e2se =
                             emf2svg((char *)content, size, &svg_out, &len_out ,options);
                         if (!e2se) {
-                            std::cerr << "ERROR: Failed to convert emf" << std::endl;
+                            std::cerr << "ERROR: Failed to convert emf blob" << std::endl;
                             ret = 1;
                         }
                         free(options);
                         break;
                     }
                     case WMF_IMGTYPE: {
-                        wmf2svg_draw((char*)content, size, width, height, &svg_out, &len_out);
+                        int e2se = wmf2svg_draw((char*)content, size, width, height, &svg_out, &len_out);
+                        if (!e2se) {
+                            std::cerr << "ERROR: Failed to convert wmf blob" << std::endl;
+                            ret = 1;
+                        }
                         break;
                     }
                     default: {
