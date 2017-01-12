@@ -75,6 +75,8 @@ include_directories(
     inc/
     /usr/local/include/
     /usr/include/
+    /usr/local/include/freetype2
+    /usr/include/freetype2
     /usr/include/librevenge-0.0/
     /usr/include/libxml2/
     /usr/local/include/librevenge-0.0/
@@ -121,6 +123,7 @@ target_link_libraries(Visio2Svg
     visio-0.1
     revenge-stream-0.0
     emf2svg
+    wmf
     TitleGenerator
 )
 
