@@ -24,6 +24,7 @@ addons_shortcuts:
         - libicu-dev
         - zlib1g-dev
         - libpng-dev
+        - libwmf-dev
 
 matrix:
   include:
