@@ -444,6 +444,7 @@ int convert_iterator(xmlNode *a_node) {
                 ret |= b64e;
                 xmlFree(imgb64);
                 imgb64 = NULL;
+                int e2se;
                 if (b64e)
                     std::cerr << "ERROR: Base64 decode failed" << std::endl;
 
@@ -461,7 +462,7 @@ int convert_iterator(xmlNode *a_node) {
                     options->imgHeight = height;
 
                     // convert emf
-                    int e2se = emf2svg((char *)content, size, &svg_out,
+                    e2se = emf2svg((char *)content, size, &svg_out,
                                        &len_out, options);
                     if (!e2se) {
                         std::cerr << "ERROR: Failed to convert emf blob"
@@ -472,7 +473,7 @@ int convert_iterator(xmlNode *a_node) {
                     break;
                 }
                 case WMF_IMGTYPE: {
-                    int e2se = wmf2svg_draw((char *)content, size, width,
+                    e2se = wmf2svg_draw((char *)content, size, width,
                                             height, &svg_out, &len_out);
                     if (!e2se) {
                         std::cerr << "ERROR: Failed to convert wmf blob"
@@ -498,8 +499,8 @@ int convert_iterator(xmlNode *a_node) {
                 root_element = xmlDocGetRootElement(doc);
 
                 // insert new nodes
-                xmlNode *emf_svg = xmlCopyNodeList(root_element);
-                xmlAddChildList(node, emf_svg);
+                xmlNode *blob_svg = xmlCopyNodeList(root_element);
+                xmlAddChildList(node, blob_svg);
                 xmlAddChildList(cur_node->parent, node);
 
                 // remove image node
