@@ -16,19 +16,19 @@
 
 // <<<<<<<<<<<<<<<<<<< END ORIGINAL HEADER >>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+#include <fstream>
 #include <stdio.h>
 #include <string.h>
-#include <fstream>
 #include <string>
 #ifdef SAFE_FILENAME
 #include <regex>
 #endif
-#include <stdlib.h>
-#include <argp.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unordered_map>
 #include "visio2svg/Visio2Svg.h"
+#include <argp.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unordered_map>
 
 using namespace std;
 

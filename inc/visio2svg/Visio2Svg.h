@@ -1,12 +1,12 @@
 /* -*- Mode: C++; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4 -*- */
 
-#include <librevenge/librevenge.h>
-#include <unordered_map>
-#include <istream>
 #include <iostream>
-#include <string>
+#include <istream>
+#include <librevenge/librevenge.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <string>
+#include <unordered_map>
 
 namespace visio2svg {
 

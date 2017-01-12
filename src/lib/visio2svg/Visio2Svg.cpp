@@ -1,24 +1,24 @@
 /* -*- Mode: C++; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4 -*- */
 
-#include "visio2svg/TitleGenerator.h"
 #include "visio2svg/Visio2Svg.h"
-#include <unordered_map>
+#include "visio2svg/TitleGenerator.h"
+#include <emf2svg.h>
 #include <iostream>
-#include <string>
-#include <stdio.h>
-#include <sstream>
-#include <librevenge/librevenge.h>
-#include <librevenge-stream/librevenge-stream.h>
 #include <librevenge-generators/librevenge-generators.h>
+#include <librevenge-stream/librevenge-stream.h>
+#include <librevenge/librevenge.h>
 #include <libvisio/libvisio.h>
-#include <string>
-#include <stdlib.h>
-#include <sys/types.h>
+#include <libwmf/api.h>
+#include <libwmf/svg.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
-#include <emf2svg.h>
-#include <libwmf/svg.h>
-#include <libwmf/api.h>
+#include <sstream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <string>
+#include <sys/types.h>
+#include <unordered_map>
 
 #define VISIOVSS 1
 #define VISIOVSD 2
@@ -38,9 +38,9 @@ Visio2Svg::~Visio2Svg() {
 
 typedef struct _ImageContext ImageContext;
 
-struct _ImageContext
-{   int number;
-    char* prefix;
+struct _ImageContext {
+    int number;
+    char *prefix;
 };
 
 int Visio2Svg::vss2svg(std::string &in,
@@ -65,54 +65,52 @@ int Visio2Svg::vsd2svg(std::string &in,
     return visio2svg(in, out, scaling, VISIOVSD);
 }
 
+int explicit_wmf_error(wmf_error_t err) {
+    int status = 0;
 
-int explicit_wmf_error (wmf_error_t err)
-{   int status = 0;
-
-    switch (err)
-    {
+    switch (err) {
     case wmf_E_None:
         status = 0;
-    break;
+        break;
 
     case wmf_E_InsMem:
         status = 1;
-    break;
+        break;
 
     case wmf_E_BadFile:
         status = 1;
-    break;
+        break;
 
     case wmf_E_BadFormat:
         status = 1;
-    break;
+        break;
 
     case wmf_E_EOF:
         status = 1;
-    break;
+        break;
 
     case wmf_E_DeviceError:
         status = 1;
-    break;
+        break;
 
     case wmf_E_Glitch:
         status = 1;
-    break;
+        break;
 
     case wmf_E_Assert:
         status = 1;
-    break;
+        break;
 
     default:
         status = 1;
-    break;
+        break;
     }
 
     return (status);
 }
 
-int wmf2svg_draw(char *content, size_t size, float wmf_width, float wmf_height, char **out, size_t *out_length)
-{   
+int wmf2svg_draw(char *content, size_t size, float wmf_width, float wmf_height,
+                 char **out, size_t *out_length) {
     int status = 0;
 
     unsigned long flags;
@@ -124,9 +122,9 @@ int wmf2svg_draw(char *content, size_t size, float wmf_width, float wmf_height, 
 
     wmf_error_t err;
 
-    wmf_svg_t* ddata = 0;
+    wmf_svg_t *ddata = 0;
 
-    wmfAPI* API = 0;
+    wmfAPI *API = 0;
     wmfD_Rect bbox;
 
     wmfAPI_Options api_options;
@@ -134,66 +132,67 @@ int wmf2svg_draw(char *content, size_t size, float wmf_width, float wmf_height, 
     flags = 0;
 
     flags |= WMF_OPT_FUNCTION;
-    //flags |= WMF_OPT_ARGS;
+    // flags |= WMF_OPT_ARGS;
     flags |= WMF_OPT_IGNORE_NONFATAL;
 
     api_options.function = wmf_svg_function;
 
-    err = wmf_api_create (&API,flags,&api_options);
-    status = explicit_wmf_error (err);
+    err = wmf_api_create(&API, flags, &api_options);
+    status = explicit_wmf_error(err);
 
-    if (status)
-    {   if (API) wmf_api_destroy (API);
+    if (status) {
+        if (API)
+            wmf_api_destroy(API);
         return (status);
     }
 
-    err = wmf_mem_open(API,(unsigned char*) content,(long) size);
-    status = explicit_wmf_error (err);
+    err = wmf_mem_open(API, (unsigned char *)content, (long)size);
+    status = explicit_wmf_error(err);
 
-    if (status)
-    {   wmf_api_destroy(API);
+    if (status) {
+        wmf_api_destroy(API);
         return (status);
     }
 
-    err = wmf_scan (API,0,&bbox);
-    status = explicit_wmf_error (err);
+    err = wmf_scan(API, 0, &bbox);
+    status = explicit_wmf_error(err);
 
-    if (status)
-    {   wmf_api_destroy (API);
+    if (status) {
+        wmf_api_destroy(API);
         return (status);
     }
 
-    ddata = WMF_SVG_GetData (API);
-    
+    ddata = WMF_SVG_GetData(API);
+
     float width;
-    float height;	
-    wmf_size (API,&width,&height);
+    float height;
+    wmf_size(API, &width, &height);
 
-    if ((width <= 0) || (height <= 0))
-    {   fputs ("Bad image size - but this error shouldn't occur...\n",stderr);
+    if ((width <= 0) || (height <= 0)) {
+        fputs("Bad image size - but this error shouldn't occur...\n", stderr);
         status = 1;
-        wmf_api_destroy (API);
+        wmf_api_destroy(API);
         return (status);
     }
 
-	//ddata->type = wmf_gd_jpeg;
+    // ddata->type = wmf_gd_jpeg;
 
-	//ddata->flags |= WMF_SVG_OUTPUT_FILE;
-    ddata->out = wmf_stream_create (API,out_f);
+    // ddata->flags |= WMF_SVG_OUTPUT_FILE;
+    ddata->out = wmf_stream_create(API, out_f);
 
-	ddata->bbox = bbox;
+    ddata->bbox = bbox;
     ddata->width = wmf_width;
     ddata->height = wmf_height;
     ddata->flags |= WMF_SVG_INLINE_IMAGES;
 
     wmfD_Rect d_r;
-    if (status == 0)
-    {   err = wmf_play (API,0,&d_r);
-        status = explicit_wmf_error (err);
+    if (status == 0) {
+        err = wmf_play(API, 0, &d_r);
+        status = explicit_wmf_error(err);
     }
 
     fclose(out_f);
-    wmf_api_destroy (API);
+    wmf_api_destroy(API);
 
     return (status);
 }
@@ -207,7 +206,8 @@ int Visio2Svg::visio2svg(std::string &in,
     // check document type
     if (!libvisio::VisioDocument::isSupported(&input)) {
         std::cerr << "ERROR: Unsupported file format (unsupported version) or "
-                     "file is encrypted!" << std::endl;
+                     "file is encrypted!"
+                  << std::endl;
         return 1;
     }
 
@@ -372,21 +372,25 @@ int convert_iterator(xmlNode *a_node) {
 
             // detect the image type
             // right now, we handle emf and wmf
-            // if image_type stays equal to UNKNOWN_IMGTYPE, it's not a type we handle
+            // if image_type stays equal to UNKNOWN_IMGTYPE, it's not a type we
+            // handle
             IMG_TYPE image_type = UNKNOWN_IMGTYPE;
             if (imgb64 != NULL) {
-                if ((!xmlStrncmp(imgb64, (const xmlChar *)"data:image/emf;base64,",
+                if ((!xmlStrncmp(imgb64,
+                                 (const xmlChar *)"data:image/emf;base64,",
                                  22))) {
                     image_type = EMF_IMGTYPE;
-                } else if ((!xmlStrncmp(imgb64, (const xmlChar *)"data:image/wmf;base64,",
-                                        22))) {
+                } else if ((!xmlStrncmp(
+                               imgb64,
+                               (const xmlChar *)"data:image/wmf;base64,",
+                               22))) {
                     image_type = WMF_IMGTYPE;
                 }
             }
 
             // if the image is something we handle, convert it to SVG
             // else, just free the imgb64 and keep the node
-            if (image_type != UNKNOWN_IMGTYPE){
+            if (image_type != UNKNOWN_IMGTYPE) {
                 xmlAttr *attribute = cur_node->properties;
                 // create an svg group node (emf conversion will be put in it)
                 xmlNode *node = xmlNewNode(NULL, (const xmlChar *)"g");
@@ -434,8 +438,7 @@ int convert_iterator(xmlNode *a_node) {
                 size_t len_out = 0;
                 size_t len = strlen((char const *)imgb64);
                 size_t size = len; //(len * 3 / 4 + 4);
-                unsigned char *content =
-                    (unsigned char *)calloc(size, 1);
+                unsigned char *content = (unsigned char *)calloc(size, 1);
                 int b64e = base64decode((char *)(imgb64 + 22), (len - 22),
                                         content, &size);
                 ret |= b64e;
@@ -445,41 +448,44 @@ int convert_iterator(xmlNode *a_node) {
                     std::cerr << "ERROR: Base64 decode failed" << std::endl;
 
                 switch (image_type) {
-                    case EMF_IMGTYPE: {
-                        // configure generator options
-                        generatorOptions *options =
-                            (generatorOptions *)calloc(1, sizeof(generatorOptions));
-                        options->verbose = false;
-                        options->emfplus = true;
-                        // options->nameSpace = (char *)"svg";
-                        options->nameSpace = NULL;
-                        options->svgDelimiter = false;
-                        options->imgWidth = width;
-                        options->imgHeight = height;
+                case EMF_IMGTYPE: {
+                    // configure generator options
+                    generatorOptions *options =
+                        (generatorOptions *)calloc(1, sizeof(generatorOptions));
+                    options->verbose = false;
+                    options->emfplus = true;
+                    // options->nameSpace = (char *)"svg";
+                    options->nameSpace = NULL;
+                    options->svgDelimiter = false;
+                    options->imgWidth = width;
+                    options->imgHeight = height;
 
-                        // convert emf
-                        int e2se =
-                            emf2svg((char *)content, size, &svg_out, &len_out ,options);
-                        if (!e2se) {
-                            std::cerr << "ERROR: Failed to convert emf blob" << std::endl;
-                            ret = 1;
-                        }
-                        free(options);
-                        break;
-                    }
-                    case WMF_IMGTYPE: {
-                        int e2se = wmf2svg_draw((char*)content, size, width, height, &svg_out, &len_out);
-                        if (!e2se) {
-                            std::cerr << "ERROR: Failed to convert wmf blob" << std::endl;
-                            ret = 1;
-                        }
-                        break;
-                    }
-                    default: {
-                        std::cerr << "ERROR: Unknown image type" << std::endl;
+                    // convert emf
+                    int e2se = emf2svg((char *)content, size, &svg_out,
+                                       &len_out, options);
+                    if (!e2se) {
+                        std::cerr << "ERROR: Failed to convert emf blob"
+                                  << std::endl;
                         ret = 1;
-                        break;
                     }
+                    free(options);
+                    break;
+                }
+                case WMF_IMGTYPE: {
+                    int e2se = wmf2svg_draw((char *)content, size, width,
+                                            height, &svg_out, &len_out);
+                    if (!e2se) {
+                        std::cerr << "ERROR: Failed to convert wmf blob"
+                                  << std::endl;
+                        ret = 1;
+                    }
+                    break;
+                }
+                default: {
+                    std::cerr << "ERROR: Unknown image type" << std::endl;
+                    ret = 1;
+                    break;
+                }
                 }
 
                 xmlDocPtr doc;

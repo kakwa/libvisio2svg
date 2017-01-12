@@ -1,16 +1,16 @@
 /* -*- Mode: C++; tab-width: 4; indent-tabs-mode: t; c-basic-offset: 4 -*- */
 
+#include <fstream>
+#include <iostream>
 #include <map>
 #include <sstream>
-#include <string>
 #include <stdio.h>
-#include <iostream>
-#include <fstream>
+#include <string>
 #include <string>
 
+#include "visio2svg/TitleGenerator.h"
 #include <librevenge-generators/librevenge-generators.h>
 #include <librevenge/RVNGBinaryData.h>
-#include "visio2svg/TitleGenerator.h"
 
 namespace visio2svg {
 
