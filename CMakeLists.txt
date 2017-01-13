@@ -8,6 +8,8 @@ find_package(libemf2svg REQUIRED)
 find_package(libwmf REQUIRED)
 find_package(librevenge REQUIRED)
 find_package(libvisio REQUIRED)
+find_package(LibXml2 REQUIRED)
+find_package(Freetype REQUIRED)
 
 # Project version (sematic versionning)
 set(vss2svg_VERSION_MAJOR 0)
@@ -80,15 +82,13 @@ LINK_DIRECTORIES(
 
 include_directories(
     inc/
-    /usr/local/include/
-    /usr/include/
-    /usr/local/include/freetype2
-    /usr/include/freetype2
-    /usr/include/librevenge-0.0/
-    /usr/include/libxml2/
-    /usr/local/include/librevenge-0.0/
-    /usr/include/libvisio-0.1/
-    /usr/local/include/libvisio-0.1/
+    ${LIBEMF2SVG_INCLUDE_DIR}
+    ${LIBWMF_INCLUDE_DIR}
+    ${LIBREVENGE_INCLUDE_DIR}
+    ${LIBVISIO_INCLUDE_DIR}
+    ${LIBFREETYPE_INCLUDE_DIR}
+    ${FREETYPE_INCLUDE_DIR_ft2build}
+    ${LIBXML2_INCLUDE_DIR}
     ${DEPS_INC_RVNG}
     ${DEPS_INC_VISIO}
     ${DEPS_INC}
@@ -120,17 +120,17 @@ set_target_properties(TitleGenerator
 )
 
 target_link_libraries(TitleGenerator
-    revenge-0.0
-    visio-0.1
-    revenge-stream-0.0
+    ${LIBREVENGE_LIBRARIES}
+    ${LIBVISIO_LIBRARIES}
 )
 
 target_link_libraries(Visio2Svg
-    revenge-0.0
-    visio-0.1
-    revenge-stream-0.0
-    emf2svg
-    wmf
+    ${LIBREVENGE_LIBRARIES}
+    ${LIBVISIO_LIBRARIES}
+    ${LIBEMF2SVG_LIBRARIES}
+    ${LIBWMF_LIBRARIES}
+    ${LIBREVENGE_STREAM_LIBRARY}
+    ${LIBXML2_LIBRARIES}
     TitleGenerator
 )
 
