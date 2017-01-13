@@ -41,7 +41,7 @@ cd ${OUT}/deps_build
 
 RVNG_VERSION=0.0.4
 VISIO_VERSION=0.1.5
-EMF_VERSION=0.5.1
+EMF_VERSION=master
 
 ! [ -e "${EMF_VERSION}.tar.gz" ] && wget https://github.com/kakwa/libemf2svg/archive/${EMF_VERSION}.tar.gz
 rm -rf libemf2svg-${EMF_VERSION}
