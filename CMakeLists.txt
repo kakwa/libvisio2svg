@@ -2,6 +2,13 @@ cmake_minimum_required (VERSION 2.6)
 
 project (vss2svg)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
+
+find_package(libemf2svg REQUIRED)
+find_package(libwmf REQUIRED)
+find_package(librevenge REQUIRED)
+find_package(libvisio REQUIRED)
+
 # Project version (sematic versionning)
 set(vss2svg_VERSION_MAJOR 0)
 set(vss2svg_VERSION_MINOR 4)
