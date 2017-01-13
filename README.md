@@ -40,6 +40,7 @@ Dependencies
 * [libvisio](https://github.com/LibreOffice/libvisio)
 * [libemf2svg](https://github.com/kakwa/libemf2svg)
 * [libxml2](http://www.xmlsoft.org/)
+* [libwmf](http://wvware.sourceforge.net/libwmf.html)
 
 Building
 ========
