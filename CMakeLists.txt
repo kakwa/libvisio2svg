@@ -27,12 +27,10 @@ add_custom_target(tag
 )
 
 # Options
-option(DEBUG     "compile with debug symbol"    OFF)
-option(STATIC    "compile statically"           OFF)
-option(USE_CLANG "build application with clang" OFF)
-option(USE_GCC   "build application with gcc"   OFF)
-option(DEPS_PATH   "enable linking in ./tests/usr/local"   OFF)
-option(FORCELE   "force little endian architecture"   OFF)
+option(DEBUG               "compile with debug symbol"                                          OFF)
+option(STATIC              "compile statically"                                                 OFF)
+option(USE_CLANG           "build application with clang"                                       OFF)
+option(USE_GCC             "build application with gcc"                                         OFF)
 option(UNSAFE_FILENAME     "disable safe file naming (if your stdlib doesn't support regex)"    OFF)
 
 if(UNSAFE_FILENAME)
@@ -45,14 +43,6 @@ if(USE_CLANG)
     set(CMAKE_CXX_COMPILER "clang++")
     set(CMAKE_CC_COMPILER  "clang"  )
 endif(USE_CLANG)
-
-if(DEPS_PATH)
-    set(DEPS_INC_RVNG "${CMAKE_SOURCE_DIR}/tests/usr/local/include/librevenge-0.0/")
-    set(DEPS_INC "${CMAKE_SOURCE_DIR}/tests/usr/local/include/")
-    set(DEPS_INC_VISIO "${CMAKE_SOURCE_DIR}/tests/usr/local/include/libvisio-0.1/")
-    set(DEPS_LINK  "${CMAKE_SOURCE_DIR}/tests/usr/local/lib"  )
-endif(DEPS_PATH)
-
 
 if(USE_GCC)
     set(CMAKE_CXX_COMPILER "g++")
@@ -77,7 +67,6 @@ endif(STATIC)
 LINK_DIRECTORIES(
     /usr/local/lib
     /usr/lib/
-    ${DEPS_LINK}
 )
 
 include_directories(
@@ -89,9 +78,6 @@ include_directories(
     ${LIBFREETYPE_INCLUDE_DIR}
     ${FREETYPE_INCLUDE_DIR_ft2build}
     ${LIBXML2_INCLUDE_DIR}
-    ${DEPS_INC_RVNG}
-    ${DEPS_INC_VISIO}
-    ${DEPS_INC}
 )
 
 add_executable(vss2svg-conv src/conv/vss2svg.cpp)

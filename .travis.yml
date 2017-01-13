@@ -33,4 +33,4 @@ matrix:
       env: CXX=g++-5 CC=gcc-5
       addons: *gcc5
 
-script: cmake . -DDEPS_PATH=ON -DUSE_CLANG=ON && make #&& ./tests/resources/check_correctness.sh
+script: cmake . -DCMAKE_LIBRARY_PATH=./tests/usr/local/lib/ -DCMAKE_INCLUDE_PATH=./tests/usr/local/include/ -DUSE_CLANG=ON && make #&& ./tests/resources/check_correctness.sh
