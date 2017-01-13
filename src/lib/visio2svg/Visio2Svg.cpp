@@ -514,15 +514,19 @@ int convert_iterator(xmlNode *a_node, xmlDocPtr root_doc) {
                         ret = 1;
                     }
                     free(options);
-                    s_sta = xmlNewDocComment(root_doc, (const unsigned char*)"emf-blob start");
-                    s_end = xmlNewDocComment(root_doc, (const unsigned char*)"emf-blob end");
+                    s_sta = xmlNewDocComment(
+                        root_doc, (const unsigned char *)"emf-blob start");
+                    s_end = xmlNewDocComment(
+                        root_doc, (const unsigned char *)"emf-blob end");
                     break;
                 }
                 case WMF_IMGTYPE: {
                     e2se = wmf2svg_draw((char *)content, size, width, height,
                                         &svg_out, &len_out);
-                    s_sta = xmlNewDocComment(root_doc, (const unsigned char*)"wmf-blob start");
-                    s_end = xmlNewDocComment(root_doc, (const unsigned char*)"wmf-blob end");
+                    s_sta = xmlNewDocComment(
+                        root_doc, (const unsigned char *)"wmf-blob start");
+                    s_end = xmlNewDocComment(
+                        root_doc, (const unsigned char *)"wmf-blob end");
                     if (e2se) {
 #ifdef DEBUG
                         std::cerr << "ERROR: Failed to convert wmf blob"
@@ -639,7 +643,8 @@ int Visio2Svg::postTreatement(const librevenge::RVNGString *in,
         xmlReadMemory(in->cstr(), in->size(), name->cstr(), NULL,
                       XML_PARSE_RECOVER | XML_PARSE_NOBLANKS | XML_PARSE_NONET);
     root_element = xmlDocGetRootElement(doc);
-    xmlNodePtr comment = xmlNewDocComment(doc, (const unsigned char*)"converted by libvisio2svg");
+    xmlNodePtr comment = xmlNewDocComment(
+        doc, (const unsigned char *)"converted by libvisio2svg");
     xmlAddChild(root_element, comment);
     // convert blobs (wmf, emf, ...)
     ret |= convert_iterator(root_element, doc);
