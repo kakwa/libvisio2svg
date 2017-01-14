@@ -9,9 +9,11 @@
 #include <librevenge/librevenge.h>
 #include <libvisio/libvisio.h>
 #include <libwmf/api.h>
+#include <libwmf/ipa.h>
 #include <libwmf/svg.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
+#include <math.h>
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,6 +31,58 @@
 #define WMF2SVG_MAXPECT (1 << 0)
 
 namespace visio2svg {
+
+static void or_wmf_svg_device_begin(wmfAPI *API) {
+    wmf_svg_t *ddata = WMF_SVG_GetData(API);
+
+    wmfStream *out = ddata->out;
+
+    WMF_DEBUG(API, "~~~~~~~~wmf_[svg_]device_begin");
+
+    if (out == 0)
+        return;
+
+    if ((out->reset(out->context)) &&
+        ((API->flags & WMF_OPT_IGNORE_NONFATAL) == 0)) {
+        WMF_ERROR(API, "unable to reset output stream!");
+        API->err = wmf_E_DeviceError;
+        return;
+    }
+
+    if ((ddata->bbox.BR.x <= ddata->bbox.TL.x) ||
+        (ddata->bbox.BR.y <= ddata->bbox.TL.y)) {
+        WMF_ERROR(API, "~~~~~~~~wmf_[svg_]device_begin: bounding box has null "
+                       "or negative size!");
+        API->err = wmf_E_Glitch;
+        return;
+    }
+
+    if ((ddata->width == 0) || (ddata->height == 0)) {
+        ddata->width = (unsigned int)ceil(ddata->bbox.BR.x - ddata->bbox.TL.x);
+        ddata->height = (unsigned int)ceil(ddata->bbox.BR.y - ddata->bbox.TL.y);
+    }
+
+    wmf_stream_printf(API, out, (char *)"<g>\n");
+
+    if (ddata->Description) {
+        wmf_stream_printf(API, out, (char *)"<desc>%s</desc>\n",
+                          ddata->Description);
+    }
+}
+
+/* This is called from the end of each play for page termination
+ */
+static void or_wmf_svg_device_end(wmfAPI *API) {
+    wmf_svg_t *ddata = WMF_SVG_GetData(API);
+
+    wmfStream *out = ddata->out;
+    wmf_stream_printf(API, out, (char *)"</g>\n");
+
+    WMF_DEBUG(API, "~~~~~~~~wmf_[svg_]device_end");
+
+    if (out == 0)
+        return;
+}
 
 Visio2Svg::Visio2Svg() {
 }
@@ -164,6 +218,11 @@ int wmf2svg_draw(char *content, size_t size, float wmf_width, float wmf_height,
 
     err = wmf_api_create(&API, flags, &api_options);
     status = explicit_wmf_error("wmf_api", err);
+
+    wmfFunctionReference *FR = (wmfFunctionReference *)API->function_reference;
+
+    FR->device_begin = or_wmf_svg_device_begin;
+    FR->device_end = or_wmf_svg_device_end;
 
     if (status) {
         if (API)
