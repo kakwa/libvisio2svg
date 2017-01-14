@@ -59,7 +59,7 @@ while getopts ":hnNxrvse:" opt; do
         XMLLINT="no"
         ;;
     r)
-        RESIZE_OPTS="-w 800 -h 600"
+        RESIZE_OPTS="-s 10"
         ;;
     N)
         IGNORECONVERR="yes"
