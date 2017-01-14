@@ -3,6 +3,9 @@
 #include <iostream>
 #include <istream>
 #include <librevenge/librevenge.h>
+#include <libwmf/api.h>
+#include <libwmf/ipa.h>
+#include <libwmf/svg.h>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <string>
