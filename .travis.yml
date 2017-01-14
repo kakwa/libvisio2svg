@@ -30,4 +30,4 @@ matrix:
       compiler: "clang"
       addons: *clang
 
-script: cmake . -DCMAKE_LIBRARY_PATH=./tests/usr/local/lib/ -DCMAKE_INCLUDE_PATH=./tests/usr/local/include/ -DUSE_CLANG=ON && make && ./tests/resources/check_correctness.sh -rsxn
+script: CC=clang CXX=clang++ cmake . -DCMAKE_LIBRARY_PATH=./tests/usr/local/lib/ -DCMAKE_INCLUDE_PATH=./tests/usr/local/include/ -DUSE_CLANG=ON && make && ./tests/resources/check_correctness.sh -rsxn
