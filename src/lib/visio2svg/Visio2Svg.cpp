@@ -37,22 +37,17 @@ static void or_wmf_svg_device_begin(wmfAPI *API) {
 
     wmfStream *out = ddata->out;
 
-    WMF_DEBUG(API, "~~~~~~~~wmf_[svg_]device_begin");
-
     if (out == 0)
         return;
 
     if ((out->reset(out->context)) &&
         ((API->flags & WMF_OPT_IGNORE_NONFATAL) == 0)) {
-        WMF_ERROR(API, "unable to reset output stream!");
         API->err = wmf_E_DeviceError;
         return;
     }
 
     if ((ddata->bbox.BR.x <= ddata->bbox.TL.x) ||
         (ddata->bbox.BR.y <= ddata->bbox.TL.y)) {
-        WMF_ERROR(API, "~~~~~~~~wmf_[svg_]device_begin: bounding box has null "
-                       "or negative size!");
         API->err = wmf_E_Glitch;
         return;
     }
