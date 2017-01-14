@@ -46,7 +46,7 @@ EMF_VERSION=master
 ! [ -e "${EMF_VERSION}.tar.gz" ] && wget https://github.com/kakwa/libemf2svg/archive/${EMF_VERSION}.tar.gz
 rm -rf libemf2svg-${EMF_VERSION}
 tar -xf ${EMF_VERSION}.tar.gz || exit 1
-cd libemf2svg-${EMF_VERSION} && cmake . && make && make install DESTDIR=$OUT && cd - || exit 1
+cd libemf2svg-${EMF_VERSION} && cmake . -DUSE_CLANG=ON && make && make install DESTDIR=$OUT && cd - || exit 1
 
 ! [ -e "librevenge-${RVNG_VERSION}.tar.xz" ] && wget http://netix.dl.sourceforge.net/project/libwpd/librevenge/librevenge-${RVNG_VERSION}/librevenge-${RVNG_VERSION}.tar.xz
 rm -rf librevenge-${RVNG_VERSION}
