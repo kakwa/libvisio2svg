@@ -92,13 +92,22 @@ mkdir -p $OUTDIR
 CMD="`$RL -f ../../vss2svg-conv`"
 OUTDIR=`$RL -f $OUTDIR`
 DTD=`$RL -f ./svg11-flat.dtd`
+
+mkdir -p "$EMFDIR"
+cd "$EMFDIR"
+if ! [ -f HP-Classic-ProLiant.zip ]
+then
+    wget http://www.visiocafe.com/downloads/hp/HP-Classic-ProLiant.zip
+    unzip HP-Classic-ProLiant.zip
+fi
+cd -
+
 for vss in `find $EMFDIR -type f -name "*.vss" |sort`
 do
     EMF="`$RL -f $vss`"
-    SVG="${OUTDIR}/`basename ${vss}`.svg"
     verbose_print "\n############## `basename "${vss}"` ####################"
-    verbose_print "Command: $CMD $RESIZE_OPTS -p -i \"$EMF\" -o \"${SVG}\""
-    $VAGRIND_CMD $CMD -p $RESIZE_OPTS -i "$EMF" -o ${SVG} $VERBOSE_OPT
+    verbose_print "Command: $CMD $RESIZE_OPTS -i \"$EMF\" -o \"${OUTDIR}\""
+    $VAGRIND_CMD $CMD -i "$EMF" -o ${OUTDIR} $VERBOSE_OPT
     tmpret=$?
     if [ $tmpret -ne 0 ]
     then
@@ -107,6 +116,8 @@ do
     fi
     if ! [ "$XMLLINT" = "no" ]
     then
+	for SVG in `find ${OUTDIR} -type f -name "*.svg" |sort`
+	do
         xmllint --dtdvalid ./svg11-flat.dtd  --noout ${SVG} >/dev/null 2>&1
         if [ $? -ne 0 ]
         then
@@ -117,10 +128,12 @@ do
             xmllint --dtdvalid ./svg11-flat.dtd  --noout ${SVG} 2>&1 >/dev/null
             printf "\n"
             printf "Convert and xmllint commands:\n"
-            printf "$CMD -p -i \"$EMF\" -o \"${SVG}\"\n"
+            printf "$CMD -i \"$EMF\" -o \"${OUTDIR}\"\n"
             printf "xmllint --dtdvalid $DTD --noout ${SVG}\n\n"
             ret=1
         fi
+	done
+	rm -f "${OUTDIR}/*.svg"
     fi
     verbose_print "\n#####################################################\n"
     [ "${STOPONERROR}" = "yes" ] && [ $ret -eq 1 ] && exit 1
