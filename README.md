@@ -191,6 +191,7 @@ Changelog
 =========
 
 0.5.0
+-----
 
 * adding support to convert wmf blob (using libwmf)
 * requires new libraries as dependencies: libwmf and freetype)
