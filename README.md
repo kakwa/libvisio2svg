@@ -196,6 +196,7 @@ Changelog
 * adding support to convert wmf blob (using libwmf)
 * requires new libraries as dependencies: libwmf and freetype)
 * requires libemf2svg version >= 1.0.0
+* cleaner and more explicit dependencies resolving in cmake
 
 0.4.1
 -----
