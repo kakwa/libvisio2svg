@@ -186,3 +186,34 @@ for (unsigned k = 0; k < output_names.size(); ++k) {
     std::cout << output_names[k].cstr() << std::endl;
 }
 ```
+
+Changelog
+=========
+
+0.5.0
+-----
+
+* adding support to convert wmf blob (using libwmf)
+* requires new libraries as dependencies: libwmf and freetype)
+* requires libemf2svg version >= 1.0.0
+* cleaner and more explicit dependencies resolving in cmake
+
+0.4.1
+-----
+
+* adding safeguard regarding unsafe output file paths
+
+0.3.0
+-----
+
+* better error handling
+
+0.2.0
+-----
+
+* add rescaling option + title
+
+0.1.0
+-----
+
+* first release
