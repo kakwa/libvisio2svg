@@ -83,6 +83,7 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
        ${SHARED} 
        src/lib/visio2svg/memstream.c
 )
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 include_directories(
     inc/
