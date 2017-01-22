@@ -49,6 +49,14 @@ if(USE_GCC)
     set(CMAKE_CC_COMPILER  "gcc")
 endif(USE_GCC)
 
+# Build external dependancies if we are on OSX
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   # Mac OS X specific code
+   set(EXTERNAL_MEMSTREAM "memstream")
+   set(EXTERNAL_ARGP "argp")
+   add_definitions(-DDARWIN)
+ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 if(DEBUG)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -DDEBUG")
     set(CMAKE_BUILD_TYPE Debug)
@@ -67,6 +75,13 @@ endif(STATIC)
 LINK_DIRECTORIES(
     /usr/local/lib
     /usr/lib/
+)
+
+IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+   # Mac OS X specific code
+   add_library(memstream 
+       ${SHARED} 
+       src/lib/visio2svg/memstream.c
 )
 
 include_directories(
