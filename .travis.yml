@@ -31,6 +31,8 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install valgrind; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install libxml2; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install icu4c; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install intltool; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link icu4c gettext --force; fi
 
 matrix:
   include:
