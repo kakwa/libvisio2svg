@@ -134,6 +134,8 @@ target_link_libraries(Visio2Svg
     ${LIBREVENGE_STREAM_LIBRARY}
     ${LIBXML2_LIBRARIES}
     TitleGenerator
+    ${EXTERNAL_MEMSTREAM}
+    ${EXTERNAL_ARGP}
 )
 
 target_link_libraries(vss2svg-conv

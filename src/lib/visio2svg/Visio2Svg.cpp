@@ -23,8 +23,7 @@
 #include <unordered_map>
 
 
-#ifndef DARWIN
-#define _POSIX_C_SOURCE 200809L
+#ifdef DARWIN
 #include <memstream.h>
 #endif
 
