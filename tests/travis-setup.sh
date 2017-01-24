@@ -48,7 +48,7 @@ rm -rf libemf2svg-${EMF_VERSION}
 tar -xf ${EMF_VERSION}.tar.gz || exit 1
 cd libemf2svg-${EMF_VERSION} && CC=clang CXX=clang++ cmake . -DUSE_CLANG=ON && make && make install DESTDIR=$OUT && cd - || exit 1
 
-if ! [ "$TRAVIS_OS_NAME" = "osx" ]
+if ! [ "`uname`" = "Darwin" ]
 then
     ! [ -e "librevenge-${RVNG_VERSION}.tar.xz" ] && wget http://netix.dl.sourceforge.net/project/libwpd/librevenge/librevenge-${RVNG_VERSION}/librevenge-${RVNG_VERSION}.tar.xz
     rm -rf librevenge-${RVNG_VERSION}

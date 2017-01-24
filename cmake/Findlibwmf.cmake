@@ -11,7 +11,9 @@ find_path(LIBWMF_INCLUDE_DIR
 
 if (NOT LIBWMF_LIBRARIES)
     find_library(LIBWMF_LIBRARIES NAMES wmf ${_LIBWMF_PATHS} PATH_SUFFIXES lib)
+    find_library(LIBWMFLITE_LIBRARIES NAMES wmflite ${_LIBWMF_PATHS} PATH_SUFFIXES lib)
 endif ()
 
 MESSAGE( STATUS "Find Header Directory for libwmf: " ${LIBWMF_INCLUDE_DIR})
 MESSAGE( STATUS "Find Dynamic Library for libwmf:  " ${LIBWMF_LIBRARIES})
+MESSAGE( STATUS "Find Dynamic Library for libwmflite:  " ${LIBWMFLITE_LIBRARIES})

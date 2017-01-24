@@ -77,14 +77,6 @@ LINK_DIRECTORIES(
     /usr/lib/
 )
 
-IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-   # Mac OS X specific code
-   add_library(memstream 
-       ${SHARED} 
-       src/lib/visio2svg/memstream.c
-)
-ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-
 include_directories(
     inc/
     ${LIBEMF2SVG_INCLUDE_DIR}
@@ -131,10 +123,10 @@ target_link_libraries(Visio2Svg
     ${LIBVISIO_LIBRARIES}
     ${LIBEMF2SVG_LIBRARIES}
     ${LIBWMF_LIBRARIES}
+    ${LIBWMFLITE_LIBRARIES}
     ${LIBREVENGE_STREAM_LIBRARY}
     ${LIBXML2_LIBRARIES}
     TitleGenerator
-    ${EXTERNAL_MEMSTREAM}
     ${EXTERNAL_ARGP}
 )
 

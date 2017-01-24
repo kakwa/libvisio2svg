@@ -24,7 +24,7 @@
 
 
 #ifdef DARWIN
-#include <memstream.h>
+#include "memstream.c"
 #endif
 
 #define VISIOVSS 1

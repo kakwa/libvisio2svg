@@ -88,7 +88,7 @@ static int memstream_grow(struct memstream *ms, int minsize)
 {
     int newcap= ms->capacity * 2;					memstream_check(ms);
     while (newcap <= minsize) newcap *= 2;				memstream_info(("grow %p to %i\n", ms, newcap));
-    ms->contents= realloc(ms->contents, newcap);
+    ms->contents= (char *)realloc(ms->contents, newcap);
     if (!ms->contents) return -1;	/* errno == ENOMEM */
     memset(ms->contents + ms->capacity, 0, newcap - ms->capacity);
     ms->capacity= newcap;
@@ -152,11 +152,11 @@ static int memstream_close(void *cookie)
 FILE *open_memstream(char **ptr, size_t *sizeloc)
 {
     if (ptr && sizeloc) {
-	struct memstream *ms= calloc(1, sizeof(struct memstream));
+	struct memstream *ms= (struct memstream *)calloc(1, sizeof(struct memstream));
 	FILE *fp= 0;							if (!ms) return 0;	/* errno == ENOMEM */
 	ms->position= ms->size= 0;
 	ms->capacity= 4096;
-	ms->contents= calloc(ms->capacity, 1);				if (!ms->contents) { free(ms);  return 0; } /* errno == ENOMEM */
+	ms->contents= (char *)calloc(ms->capacity, 1);				if (!ms->contents) { free(ms);  return 0; } /* errno == ENOMEM */
 	ms->ptr= ptr;
 	ms->sizeloc= sizeloc;
 	memstream_print(ms);
