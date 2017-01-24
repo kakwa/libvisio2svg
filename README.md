@@ -17,7 +17,7 @@ and reuse them outside of Microsoft Visio, in programs like
 [yEd](https://www.yworks.com/products/yed), [Inkscape](https://inkscape.org), 
 [Dia](http://dia-installer.de/), [Calligra Flow](https://www.calligra.org/flow/)...
 
-This library is mainly the glue between [librevenge](http://sourceforge.net/p/libwpd/wiki/librevenge/)/[libvisio](https://github.com/LibreOffice/libvisio) and [libemf2svg](https://github.com/kakwa/libemf2svg).
+This library is mainly the glue between [librevenge](http://sourceforge.net/p/libwpd/wiki/librevenge/)/[libvisio](https://github.com/LibreOffice/libvisio), [libemf2svg](https://github.com/kakwa/libemf2svg) and [libwmf](http://wvware.sourceforge.net/libwmf.html).
 
 About libemf2svg
 ----------------
