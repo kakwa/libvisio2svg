@@ -190,6 +190,11 @@ for (unsigned k = 0; k < output_names.size(); ++k) {
 Changelog
 =========
 
+0.5.1
+-----
+
+* add support for OSX
+
 0.5.0
 -----
 
