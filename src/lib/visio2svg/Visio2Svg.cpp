@@ -661,8 +661,8 @@ int Visio2Svg::scale_title(xmlNode **root, xmlDocPtr *doc, double scaling,
         if ((!xmlStrcmp(attribute->name, (const xmlChar *)"width")) ||
             (!xmlStrcmp(attribute->name, (const xmlChar *)"height"))) {
             double geom = atof((const char *)value);
-            char *cgeom = (char *)malloc(7);
-            snprintf(cgeom, 6, "%4.f", geom * scaling);
+            char *cgeom = (char *)calloc(1, 50);
+            snprintf(cgeom, 50, "%.10f", geom * scaling);
             xmlNewProp(new_root, attribute->name, (const xmlChar *)cgeom);
             free(cgeom);
         } else {
