@@ -190,6 +190,13 @@ for (unsigned k = 0; k < output_names.size(); ++k) {
 Changelog
 =========
 
+0.5.2
+-----
+
+* fix error in setting title field with titles containing "&"
+* add XML_PARSE_HUGE in xml parsing to allow big image blobs.
+* better precision for image dimensions (keep 10 decimals)
+
 0.5.1
 -----
 
