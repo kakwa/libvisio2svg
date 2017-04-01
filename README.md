@@ -1,6 +1,7 @@
 Libvisio2svg
 ============
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1a12a0936ee748939772e551f3e4205a)](https://www.codacy.com/app/carpentier-pf/libvisio2svg?utm_source=github.com&utm_medium=referral&utm_content=kakwa/libvisio2svg&utm_campaign=badger)
 [![Build Status](https://travis-ci.org/kakwa/libvisio2svg.svg?branch=master)](https://travis-ci.org/kakwa/libvisio2svg)
 
 
