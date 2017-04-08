@@ -109,9 +109,12 @@ $ vsd2svg-conv --help
 ```
 
 Library
--------
+=======
 
-Convert Visio Documents:
+Convert Visio Documents
+-----------------------
+
+example:
 ```cpp
 #include <string>
 #include <stdlib.h>
@@ -151,7 +154,10 @@ for (const auto &rule_pair : out) {
 }
 ```
 
-This library also comes with a RVNG generator to recover sheets titles:
+Recover symbol titles
+---------------------
+
+This library also comes with a RVNG generator to recover symbol titles:
 
 ```cpp
 #include <librevenge-stream/librevenge-stream.h>
