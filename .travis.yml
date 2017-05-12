@@ -9,6 +9,7 @@ addons_shortcuts:
       sources: [ 'ubuntu-toolchain-r-test', 'ppa:kubuntu-ppa/backports' ]
       packages: 
         - libvisio-dev
+        - librevenge-dev
         - clang
         - libboost-dev
         - libxml2-dev
