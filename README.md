@@ -213,6 +213,11 @@ int main(int argc, char **argv) {
 Changelog
 =========
 
+0.5.3
+-----
+
+* fix segfault if shape doesn't contain title
+
 0.5.2
 -----
 
