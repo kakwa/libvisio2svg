@@ -15,7 +15,11 @@
 namespace visio2svg {
 
 void TitleGenerator::startPage(const librevenge::RVNGPropertyList &propList) {
-    titles.append(propList["draw:name"]->getStr().cstr());
+    if (propList["draw:name"]) {
+        titles.append(propList["draw:name"]->getStr().cstr());
+    } else {
+        titles.append(NULL);
+    }
 }
 void TitleGenerator::startDocument(
     const librevenge::RVNGPropertyList &propList){};

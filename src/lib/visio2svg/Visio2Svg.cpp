@@ -343,7 +343,13 @@ int Visio2Svg::visio2svg(std::string &in,
         // and resize image
         ret |= postTreatement(&output[k], &output_names[k], &post_treated,
                               scaling);
-        std::pair<std::string, std::string> item(output_names[k].cstr(),
+        std::string title;
+        if (output_names[k].empty()) {
+            title = "no_title_" + std::to_string(k);
+        } else {
+            title = output_names[k].cstr();
+        }
+        std::pair<std::string, std::string> item(title,
                                                  std::string(post_treated));
         // output[k].cstr());
         free(post_treated);
