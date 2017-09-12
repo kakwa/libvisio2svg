@@ -14,7 +14,7 @@ find_package(Freetype REQUIRED)
 # Project version (sematic versionning)
 set(vss2svg_VERSION_MAJOR 0)
 set(vss2svg_VERSION_MINOR 5)
-set(vss2svg_VERSION_PATCH 3)
+set(vss2svg_VERSION_PATCH 4)
 
 set(vss2svg_VERSION ${vss2svg_VERSION_MAJOR}.${vss2svg_VERSION_MINOR}.${vss2svg_VERSION_PATCH})
 # set version as a definition
@@ -83,8 +83,9 @@ include_directories(
     ${LIBWMF_INCLUDE_DIR}
     ${LIBREVENGE_INCLUDE_DIR}
     ${LIBVISIO_INCLUDE_DIR}
-    ${LIBFREETYPE_INCLUDE_DIR}
+    ${FREETYPE_INCLUDE_DIRS}
     ${FREETYPE_INCLUDE_DIR_ft2build}
+    ${FREETYPE_INCLUDE_DIR_freetype2}
     ${LIBXML2_INCLUDE_DIR}
 )
 
