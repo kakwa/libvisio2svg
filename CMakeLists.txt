@@ -139,11 +139,19 @@ target_link_libraries(vsd2svg-conv
     Visio2Svg
 )
 
+if (NOT LIB_INSTALL_DIR)
+    set(LIB_INSTALL_DIR lib)
+endif ()
+
+if (NOT BIN_INSTALL_DIR)
+    set(BIN_INSTALL_DIR bin)
+endif ()
+
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 INSTALL(TARGETS vss2svg-conv vsd2svg-conv TitleGenerator Visio2Svg
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION ${BIN_INSTALL_DIR}
+  LIBRARY DESTINATION ${LIB_INSTALL_DIR}
+  ARCHIVE DESTINATION ${LIB_INSTALL_DIR}
 )
 
 INSTALL(DIRECTORY inc/visio2svg DESTINATION "include")
