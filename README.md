@@ -213,6 +213,16 @@ int main(int argc, char **argv) {
 Changelog
 =========
 
+0.5.5
+-----
+
+* add LIB_INSTALL_DIR variable in cmake
+
+0.5.4
+-----
+
+* fix freetype discovery in cmake
+
 0.5.3
 -----
 
