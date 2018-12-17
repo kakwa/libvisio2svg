@@ -41,6 +41,7 @@ Dependencies
 * [libemf2svg](https://github.com/kakwa/libemf2svg)
 * [libxml2](http://www.xmlsoft.org/)
 * [libwmf](http://wvware.sourceforge.net/libwmf.html)
+* [fonts from the ghostscript project](https://www.ghostscript.com/) (libwmf requirement, usually the package is named `gsfonts`)
 
 Building
 ========
