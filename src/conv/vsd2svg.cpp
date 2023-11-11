@@ -123,7 +123,12 @@ int main(int argc, char *argv[]) {
     std::string outputdir("");
     if (arguments.output != NULL) {
         std::string outputdir(arguments.output);
-        mkdir(arguments.output, S_IRWXU);
+        #ifdef _WIN32
+    mkdir(arguments.output);
+#else
+    mkdir(arguments.output, S_IRWXU);
+#endif
+      
     }
 
     std::ifstream stin(arguments.input);
