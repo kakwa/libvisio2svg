@@ -1,5 +1,6 @@
-cmake_minimum_required (VERSION 2.6)
-
+cmake_minimum_required (VERSION 3.5)
+include(CheckFunctionExists)
+include(FetchContent)
 project (vss2svg)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
@@ -48,14 +49,60 @@ if(USE_GCC)
     set(CMAKE_CXX_COMPILER "g++")
     set(CMAKE_CC_COMPILER  "gcc")
 endif(USE_GCC)
+ 
+set(FMEM_NAME fmem${EXTERNAL_LIB_DIR_SUFFIX})
 
-# Build external dependancies if we are on OSX
-IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-   # Mac OS X specific code
-   set(EXTERNAL_MEMSTREAM "memstream")
-   set(EXTERNAL_ARGP "argp")
-   add_definitions(-DDARWIN)
-ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+FetchContent_Declare(
+    fmem
+    GIT_REPOSITORY https://github.com/kreijstal/fmem.git
+    GIT_TAG master
+    PREFIX ${DEPS}
+    CMAKE_CACHE_ARGS
+        -DBUILD_TESTING:BOOL=FALSE
+        -DCMAKE_INSTALL_PREFIX:PATH=${DEPS}
+        -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
+        ${PLATFORM_TOOLCHAIN_OPTION}
+        ${CMAKE_OSX_ARCHITECTURES_OPTION}
+)
+
+FetchContent_MakeAvailable(fmem)
+#set(EXTERNAL_FMEM "fmem")
+message(STATUS "Configuring argp")
+list(APPEND CMAKE_MESSAGE_INDENT "   ")
+message(STATUS "Checking if argp is provided by system libraries")
+CHECK_FUNCTION_EXISTS(argp_parse HAVE_BUNDLED_ARGP_PARSE_FUNCTION)
+
+message(STATUS "Looking for standalone argp library")
+set(CMAKE_REQUIRED_LIBRARIES argp)
+CHECK_FUNCTION_EXISTS(argp_parse HAVE_EXTERNAL_ARGP_PARSE_FUNCTION)
+list(POP_BACK CMAKE_MESSAGE_INDENT)
+if(HAVE_BUNDLED_ARGP_PARSE_FUNCTION)
+  message(STATUS "Using bundled argp")
+elseif(HAVE_EXTERNAL_ARGP_PARSE_FUNCTION)
+  message(STATUS "Using stand-alone argp")
+  set(EXTERNAL_ARGP "argp")
+else()
+  message(STATUS "Building argp")
+  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    set(EXTERNAL_ARGP "-Wl,-force_load,${DEPS}/lib/libargp-standalone.a")
+  else()
+    set(EXTERNAL_ARGP "argp-standalone")
+  endif()
+
+  FetchContent_Declare(
+    argp_standalone
+    GIT_REPOSITORY https://github.com/tom42/argp-standalone.git
+    GIT_TAG 238d83d6fb4fbdbb3e0893f51698d8d54696bfb0
+    # Optionally specify where to download the content
+    # SOURCE_DIR "${CMAKE_BINARY_DIR}/_deps/argp-src"
+    # BINARY_DIR "${CMAKE_BINARY_DIR}/_deps/argp-build"
+  )
+  FetchContent_MakeAvailable(argp_standalone)
+
+  # Assuming argp_standalone creates a target, you can link it directly.
+  # If not, you might still need to set up include directories or link libraries manually.
+endif(HAVE_BUNDLED_ARGP_PARSE_FUNCTION)
+
 
 if(DEBUG)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -DDEBUG")
@@ -101,7 +148,7 @@ add_library(Visio2Svg
     ${SHARED}
     src/lib/visio2svg/Visio2Svg.cpp
 )
-
+#add_dependencies(Visio2Svg ${FMEM_NAME})
 set_target_properties(Visio2Svg
     PROPERTIES
     VERSION ${vss2svg_VERSION}
@@ -129,6 +176,7 @@ target_link_libraries(Visio2Svg
     ${LIBXML2_LIBRARIES}
     TitleGenerator
     ${EXTERNAL_ARGP}
+    fmem
 )
 
 target_link_libraries(vss2svg-conv
