@@ -14,7 +14,7 @@ find_package(Freetype REQUIRED)
 # Project version (sematic versionning)
 set(vss2svg_VERSION_MAJOR 0)
 set(vss2svg_VERSION_MINOR 5)
-set(vss2svg_VERSION_PATCH 5)
+set(vss2svg_VERSION_PATCH 6)
 
 set(vss2svg_VERSION ${vss2svg_VERSION_MAJOR}.${vss2svg_VERSION_MINOR}.${vss2svg_VERSION_PATCH})
 # set version as a definition
@@ -152,7 +152,7 @@ if (NOT INCLUDE_INSTALL_DIR)
 endif ()
 
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 INSTALL(TARGETS vss2svg-conv vsd2svg-conv TitleGenerator Visio2Svg
   RUNTIME DESTINATION ${BIN_INSTALL_DIR}
   LIBRARY DESTINATION ${LIB_INSTALL_DIR}
