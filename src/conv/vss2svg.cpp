@@ -144,7 +144,11 @@ int main(int argc, char *argv[]) {
     ret = converter.vss2svg(in, out, scaling);
 
     std::string outputdir(arguments.output);
+    #ifdef _WIN32
+    mkdir(arguments.output);
+#else
     mkdir(arguments.output, S_IRWXU);
+#endif
 
     for (const auto &rule_pair : out) {
         ofstream myfile;
