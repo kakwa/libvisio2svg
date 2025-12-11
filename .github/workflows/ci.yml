@@ -61,8 +61,8 @@ jobs:
       run: |
         mkdir test_output
         cd test_output
-        wget http://www.visiocafe.com/downloads/hp/HP-Classic-ProLiant.zip
-        unzip HP-Classic-ProLiant.zip
+        wget http://www.visiocafe.com/downloads/hp/HPE-Recent_2025-10-14.zip
+        unzip HPE-Recent_2025-10-14.zip
         mkdir output
         find . -name "*.vss" | head -1 | xargs ../build/vss2svg-conv -i -o output/
         if [ $? -eq 0 ]; then
