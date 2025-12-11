@@ -28,6 +28,8 @@ jobs:
           valgrind \
           cmake \
           libcppunit-dev \
+          libfontconfig-dev \
+          libfreetype-dev \
           autotools-dev \
           doxygen \
           gperf \
@@ -42,7 +44,7 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         brew update
-        brew install argp-standalone libwmf libxml2 icu4c intltool librevenge libvisio wget pkg-config
+        brew install argp-standalone fontconfig freetype icu4c intltool librevenge libvisio libwmf libxml2 pkg-config wget
 
     - name: Set up dependencies
       run: ./tests/setup-dependencies.sh
