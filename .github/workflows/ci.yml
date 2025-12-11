@@ -42,7 +42,7 @@ jobs:
       if: runner.os == 'macOS'
       run: |
         brew update
-        brew install argp-standalone libwmf valgrind libxml2 icu4c intltool librevenge libvisio wget pkg-config
+        brew install argp-standalone libwmf libxml2 icu4c intltool librevenge libvisio wget pkg-config
 
     - name: Set up dependencies
       run: ./tests/setup-dependencies.sh
