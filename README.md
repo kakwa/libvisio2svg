@@ -214,6 +214,16 @@ int main(int argc, char **argv) {
 Changelog
 =========
 
+0.5.7
+-----
+
+* Fix crash/double free caused by iffy libxml2 memory management
+
+0.5.6
+-----
+
+* C++ 17
+
 0.5.5
 -----
 

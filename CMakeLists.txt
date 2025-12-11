@@ -14,7 +14,7 @@ find_package(Freetype REQUIRED)
 # Project version (sematic versionning)
 set(vss2svg_VERSION_MAJOR 0)
 set(vss2svg_VERSION_MINOR 5)
-set(vss2svg_VERSION_PATCH 6)
+set(vss2svg_VERSION_PATCH 7)
 
 set(vss2svg_VERSION ${vss2svg_VERSION_MAJOR}.${vss2svg_VERSION_MINOR}.${vss2svg_VERSION_PATCH})
 # set version as a definition
