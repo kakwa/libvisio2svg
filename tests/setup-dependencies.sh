@@ -50,9 +50,9 @@ cd libemf2svg-${EMF_VERSION} && CC=clang CXX=clang++ cmake . -DUSE_CLANG=ON -DCM
 
 if ! [ "`uname`" = "Darwin" ]
 then
-    ! [ -e "librevenge-${RVNG_VERSION}.tar.xz" ] && wget https://dev-www.libreoffice.org/src/librevenge-${RVNG_VERSION}.tar.xz
+    ! [ -e "librevenge-${RVNG_VERSION}.tar.bz2" ] && wget https://dev-www.libreoffice.org/src/librevenge-${RVNG_VERSION}.tar.bz2
     rm -rf librevenge-${RVNG_VERSION}
-    tar -xf librevenge-${RVNG_VERSION}.tar.xz || exit 1
+    tar -xf librevenge-${RVNG_VERSION}.tar.bz2 || exit 1
     cd librevenge-${RVNG_VERSION} && ./configure --disable-tests --without-docs && make && make install DESTDIR=$OUT && cd - || exit 1
     find $OUT -name "*.pc" -exec sed -i "s|^prefix=|prefix=$OUT|" {} \;
     
