@@ -36,3 +36,4 @@ vsd2svg-conv
 out
 tests/deps_build/
 tests/usr/
+test_output/

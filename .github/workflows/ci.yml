@@ -52,22 +52,10 @@ jobs:
 
     - name: Build
       run: |
-        mkdir build
-        cd build
+        mkdir build/
+        cd build/
         CC=clang CXX=clang++ cmake .. -DCMAKE_LIBRARY_PATH=./tests/usr/local/lib/ -DCMAKE_INCLUDE_PATH=./tests/usr/local/include/ -DUSE_CLANG=ON -DUNSAFE_FILENAME=ON
         make
 
     - name: Test VSS conversion
-      run: |
-        mkdir test_output
-        cd test_output
-        wget http://www.visiocafe.com/downloads/hp/HPE-Recent_2025-10-14.zip
-        unzip HPE-Recent_2025-10-14.zip
-        mkdir output
-        find . -name "*.vss" | head -1 | xargs ../build/vss2svg-conv -i -o output/
-        if [ $? -eq 0 ]; then
-          echo "VSS conversion test passed"
-        else
-          echo "VSS conversion test failed"
-          exit 1
-        fi
+      run: ./tests/test-vss-conversion.sh
