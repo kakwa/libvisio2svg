@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies (Ubuntu)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libvisio-dev \
+          clang \
+          libboost-dev \
+          libxml2-dev \
+          valgrind \
+          cmake \
+          libcppunit-dev \
+          autotools-dev \
+          doxygen \
+          gperf \
+          libicu-dev \
+          zlib1g-dev \
+          libpng-dev \
+          libwmf-dev \
+          wget \
+          pkg-config
+
+    - name: Install dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        brew update
+        brew install argp-standalone libwmf valgrind libxml2 icu4c intltool librevenge libvisio wget pkg-config
+
+    - name: Set up dependencies
+      run: ./tests/setup-dependencies.sh
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        CC=clang CXX=clang++ cmake .. -DCMAKE_LIBRARY_PATH=./tests/usr/local/lib/ -DCMAKE_INCLUDE_PATH=./tests/usr/local/include/ -DUSE_CLANG=ON -DUNSAFE_FILENAME=ON
+        make
