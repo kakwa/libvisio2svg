@@ -46,7 +46,7 @@ EMF_VERSION=master
 ! [ -e "${EMF_VERSION}.tar.gz" ] && wget https://github.com/kakwa/libemf2svg/archive/${EMF_VERSION}.tar.gz
 rm -rf libemf2svg-${EMF_VERSION}
 tar -xf ${EMF_VERSION}.tar.gz || exit 1
-cd libemf2svg-${EMF_VERSION} && CC=clang CXX=clang++ cmake . -DUSE_CLANG=ON && make && make install DESTDIR=$OUT && cd - || exit 1
+cd libemf2svg-${EMF_VERSION} && CC=clang CXX=clang++ cmake . -DUSE_CLANG=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5 && make && make install DESTDIR=$OUT && cd - || exit 1
 
 if ! [ "`uname`" = "Darwin" ]
 then
