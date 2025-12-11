@@ -21,6 +21,7 @@
 #include <string>
 #include <sys/types.h>
 #include <unordered_map>
+#include <fmem.h>
 
 #ifdef DARWIN
 #include "memstream.c"
@@ -195,7 +196,17 @@ int wmf2svg_draw(char *content, size_t size, float wmf_width, float wmf_height,
     unsigned long flags;
 
     FILE *out_f;
-    out_f = open_memstream(out, out_length);
+    fmem fmem_stream;
+
+    // Initialize the fmem structure
+    fmem_init(&fmem_stream);
+
+    // Open a memory-backed file stream
+    out_f = fmem_open(&fmem_stream, "w");
+    if (out_f == NULL) {
+        fmem_term(&fmem_stream);
+        return -1; // or handle the error appropriately
+    }
 
     ImageContext IC;
 
@@ -275,8 +286,17 @@ int wmf2svg_draw(char *content, size_t size, float wmf_width, float wmf_height,
         err = wmf_play(API, 0, &d_r);
         status = explicit_wmf_error("play", err);
     }
+    void *buffer;
+    fmem_mem(&fmem_stream, &buffer, out_length);
+
+    // Allocate memory for the output
+    *out = static_cast<char*>(malloc(*out_length));
+    if (*out) {
+        memcpy(*out, buffer, *out_length);
+    }
 
     fclose(out_f);
+    fmem_term(&fmem_stream);
     wmf_api_destroy(API);
 
 #ifdef DEBUG
