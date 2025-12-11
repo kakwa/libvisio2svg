@@ -18,7 +18,8 @@ void TitleGenerator::startPage(const librevenge::RVNGPropertyList &propList) {
     if (propList["draw:name"]) {
         titles.append(propList["draw:name"]->getStr().cstr());
     } else {
-        titles.append(NULL);
+        // Append empty string instead of NULL to avoid null pointer issues
+        titles.append("");
     }
 }
 void TitleGenerator::startDocument(
