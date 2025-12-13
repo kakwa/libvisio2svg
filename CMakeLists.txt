@@ -10,6 +10,7 @@ find_package(librevenge REQUIRED)
 find_package(libvisio REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(Freetype REQUIRED)
+find_package(argp)
 
 # Project version (sematic versionning)
 set(vss2svg_VERSION_MAJOR 0)
@@ -53,7 +54,6 @@ endif(USE_GCC)
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
    # Mac OS X specific code
    set(EXTERNAL_MEMSTREAM "memstream")
-   set(EXTERNAL_ARGP "argp")
    add_definitions(-DDARWIN)
 ENDIF(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
@@ -87,6 +87,7 @@ include_directories(
     ${FREETYPE_INCLUDE_DIR_ft2build}
     ${FREETYPE_INCLUDE_DIR_freetype2}
     ${LIBXML2_INCLUDE_DIR}
+    ${ARGP_INCLUDE_DIRS}
 )
 
 add_executable(vss2svg-conv src/conv/vss2svg.cpp)
@@ -128,7 +129,7 @@ target_link_libraries(Visio2Svg
     ${LIBREVENGE_STREAM_LIBRARY}
     ${LIBXML2_LIBRARIES}
     TitleGenerator
-    ${EXTERNAL_ARGP}
+    ${ARGP_LIBRARIES}
 )
 
 target_link_libraries(vss2svg-conv
