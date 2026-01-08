@@ -40,13 +40,13 @@ static char doc[] = "vsd2svg -- Visio VSD to SVG converter";
 
 static struct argp_option options[] = {
     {"input", 'i', "FILE", 0, "Input Visio .vsd file"},
-    {"output", 'o', "DIR", 0, "Output directory"},
+    {"output", 'o', "DIR", 0, "Write SVGs to output directory"},
     {"scaling", 's', "FLOAT", 0, "Scaling factor"},
     {"version", 'V', 0, 0, "Print vsd2svg version"},
     {0}};
 
 /* A description of the arguments we accept. */
-static char args_doc[] = "[options] -i <in vsd> -o <out dir>";
+static char args_doc[] = "[options] -i <in vsd>";
 
 struct arguments {
     char *args[2]; /* arg1 & arg2 */
@@ -120,11 +120,10 @@ int main(int argc, char *argv[]) {
                   << "Missing --input=FILE argument\n";
         return 1;
     }
-
-    if (arguments.output == NULL) {
-        std::cerr << "[ERROR] "
-                  << "Missing --output=DIR argument\n";
-        return 1;
+    std::string outputdir("");
+    if (arguments.output != NULL) {
+        std::string outputdir(arguments.output);
+        mkdir(arguments.output, S_IRWXU);
     }
 
     std::ifstream stin(arguments.input);
@@ -143,27 +142,30 @@ int main(int argc, char *argv[]) {
 
     ret = converter.vsd2svg(in, out, scaling);
 
-    std::string outputdir(arguments.output);
-    mkdir(arguments.output, S_IRWXU);
-
     for (const auto &rule_pair : out) {
         ofstream myfile;
 #ifdef SAFE_FILENAME
         std::regex e("[^A-Za-z0-9-]");
         std::basic_string<char> newfilename =
-            outputdir + "/" + std::regex_replace(rule_pair.first, e, "_") +
-            ".svg";
+            outputdir + (arguments.output != NULL ? "/" : "") + std::regex_replace(rule_pair.first, e, "_") + ".svg";
 #else
         std::basic_string<char> newfilename =
             outputdir + rule_pair.first + ".svg";
 #endif
-        myfile.open(newfilename);
-        myfile << rule_pair.second << std::endl;
-        myfile.close();
-        if (!myfile) {
-            std::cerr << "[ERROR] "
-                      << "Failed to write file '" << rule_pair.first << "'\n";
-            ret = 1;
+        if (arguments.output != NULL) {
+            myfile.open(newfilename);
+            myfile << rule_pair.second << std::endl;
+            myfile.close();
+            if (!myfile) {
+                std::cerr << "[ERROR] "
+                          << "Failed to write file '" << rule_pair.first << "'\n";
+                ret = 1;
+            }
+        }
+        else
+        {
+            std::cout << rule_pair.second << std::endl;
+            std::cout << "\n######################################\n";
         }
     }
 

@@ -105,6 +105,9 @@ $ vsd2svg-conv -i ./my.VSD -o ./out/ -s 7
 $ ls out/
 Page-1.svg  Page-2.svg  Page-3.svg  Page-4.svg
 
+# output to screen
+$ vsd2svg-conv -i ./my.VSD
+
 # help
 $ vsd2svg-conv --help
 ```
